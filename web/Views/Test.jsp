@@ -1,36 +1,52 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: kir73
-  Date: 23.02.2018
-  Time: 15:41
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<link rel="stylesheet" href="teststyle.css"/>
-<script src="ul-drop.js" type="text/javascript"></script>
-<ul class="ul-treefree">
-    <li>Древовидный список;
-        <ul>
-            <li>У каждого элемента списка есть родитель, кроме элементов первого уровня;</li>
-            <li>Каждый следующий уровень вложенности смещается внутрь на фиксированное расстояние; </li>
-            <li>Наличие соединяющих линий;
-                <ul>
-                    <li>Все элементы &bdquo;братья&ldquo; должны соединяться линией;</li>
-                    <li>Все элементы &bdquo;дети&ldquo; должны соединяться линией с родителем;</li>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<ul id="trees">
+    <li>
+        1
+        <ul class="box_hide">
+            <li>1.1</li>
+            <li>1.2</li>
+            <li>1.3</li>
+            <li>
+                1.4
+                <ul class="box_hide">
+                    <li>1.4.1</li>
+                    <li>1.4.2</li>
+                    <li>1.4.3</li>
+                    <li>1.4.4</li>
+                    <li>1.4.5</li>
+                    <li>1.4.6</li>
                 </ul>
             </li>
-            <li>Элементы древовидного списка не должны иметь фоновую заливку для возможности отображения списка над любым градиентным фоном;</li>
         </ul>
     </li>
-    <li>Раскрывающийся древовидный список;
-        <ul>
-            <li>Все то же что и у простого древовидного списка;</li>
-            <li>Наличие управляющих кнопок &bdquo;плюсиков&ldquo;;
-                <ul>
-                    <li>Каждый элемент являющийся родителем слева от себя должен иметь управляющую кнопку &bdquo;плюсик&ldquo;;</li>
-                    <li>При нажатии на эту кнопку дочерние элементы показываются, а кнопка приобретает вид минуса, при повторном нажатии дочернии элементы скрываются, кнопка приобретает свой первоначальный вид.</li>
-                </ul>
-            </li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+    <li>
+        5
+        <ul class="box_hide">
+            <li>5.1</li>
+            <li>5.2</li>
+            <li>5.3</li>
+            <li>5.4</li>
         </ul>
     </li>
 </ul>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#trees').find("li").click(function(event){
+            $(this).children("ul").toggleClass("box_hide");
+            event.stopPropagation();
+        });
+    });
+</script>
+</body>
+</html>
