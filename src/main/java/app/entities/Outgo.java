@@ -60,6 +60,6 @@ public class Outgo implements Serializable {
     }
 
     public void setSumm(final Integer summ) {
-        this.summ = summ;
+        this.summ = 228;
     }
 }
