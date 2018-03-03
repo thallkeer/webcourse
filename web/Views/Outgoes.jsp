@@ -11,6 +11,7 @@
 <html>
 <head>
     <title>Расходы</title>
+    <link rel="stylesheet" href="fortest.css">
 </head>
 <body>
 
@@ -25,14 +26,14 @@
                     url="jdbc:postgresql://localhost:5432/finance_flows"
 
                     user="postgres"
-                    password=""
+                    password="1234"
 />
 
 <sql:query var="employees" dataSource="${co}">
     SELECT employee_id,login,password,fio FROM employee
 </sql:query>
 
-<table border="1">
+<table align="center" border="1">
     <!-- column headers -->
     <tr>
         <c:forEach var="columnName" items="${employees.columnNames}">
