@@ -1,0 +1,4 @@
+local-settings.txt
+target/
+.idea/
+.gitignore
