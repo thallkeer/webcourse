@@ -3,33 +3,20 @@
 <html>
 <head>
     <title>User Page</title>
+    <link rel="stylesheet" href="fortest.css"/>
+    <ul>
+        <li><a href="Outgoes.jsp">Расходы</a></li>
+        <li><a href="#news">Новости</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#about">About</a></li>
+        <li id="li06"><div style="text-align: right"><a href="<%=request.getContextPath()%>/LogoutServlet">Logout</a></div></li>
+        <li id="li05">Welcome <%=request.getAttribute("login") %></li>
+    </ul>
 </head>
 <body>
 <center><h2>User's Home</h2></center>
-Welcome <%=request.getAttribute("login") %>
-
-<table border="1">
-    <thead>
-    <tr>
-        <th>Расходы сотрудника</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>To view the contact details of an IFPWAFCAD certified former
-            professional wrestler in your area, select a subject below:</td>
-    </tr>
-    <tr>
-        <td>
-                <li><a href="/Views/Outgoes">Расходы</a></li>
-        </td>
-    </tr>
-    </tbody>
-</table>
 
 
-
-<div style="text-align: right"><a href="<%=request.getContextPath()%>/LogoutServlet">Logout</a></div>
 
 </body>
 </html>

@@ -15,13 +15,14 @@
 </head>
 <body>
 
-<%--<div class="cont">--%>
-    <%--<form name="form" action="<%=request.getContextPath()%>--%>
-<%--/AddOutgoServlet" method="post">--%>
+<div class="addfrom">
+    <form name="form" action="<%=request.getContextPath()%>
+/AddOutgoServlet" method="post">
 
-    <%--</form>--%>
-<%--</div>--%>
-<%--<li><a href="/Views/Outgoes">Расходы</a></li>--%>
+    </form>
+</div>
+<li><a href="<c:url value="/Views/Outgoes"/>">Расходы</a></li>
+
 <sql:setDataSource  var="co"   driver="org.postgresql.Driver"
                     url="jdbc:postgresql://localhost:5432/finance_flows"
 
@@ -29,19 +30,25 @@
                     password="1234"
 />
 
-<sql:query var="employees" dataSource="${co}">
-    SELECT employee_id,login,password,fio FROM employee
-</sql:query>
+<sql:query var="outgoes" dataSource="${co}">
+    SELECT t.description as "Статья расходов",summ as "Потрачено" FROM outgo o left join (select employee_id,login,fio from employee) as e on e.employee_id=o.emp_id
+    left join (select task_id,description from task) as t on t.task_id=o.task_id
+ </sql:query>
+
 
 <table align="center" border="1">
     <!-- column headers -->
+    <%--<thead>--%>
+    <%--<th>Расходы сотрудника <%=request.getAttribute("login") %></th>--%>
+    <%--</thead>--%>
+    <caption>Расходы сотрудника <%=request.getAttribute("login")%></caption>
     <tr>
-        <c:forEach var="columnName" items="${employees.columnNames}">
+        <c:forEach var="columnName" items="${outgoes.columnNames}">
             <th><c:out value="${columnName}"/></th>
         </c:forEach>
     </tr>
     <!-- column data -->
-    <c:forEach var="row" items="${employees.rowsByIndex}">
+    <c:forEach var="row" items="${outgoes.rowsByIndex}">
         <tr>
             <c:forEach var="column" items="${row}">
                 <td><c:out value="${column}"/></td>

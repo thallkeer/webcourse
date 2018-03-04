@@ -5,7 +5,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Авторизация</title>
     <link rel="stylesheet" href="style.css"/>
-
 </head>
 <body>
 <div class="cont">

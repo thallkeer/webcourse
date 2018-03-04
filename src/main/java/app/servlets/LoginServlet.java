@@ -30,16 +30,16 @@ public class LoginServlet extends HttpServlet {
 
             switch (userValidate) {
                 case 1: {
-                    System.out.println("Admin's Home");
+                    //System.out.println("Admin's Home");
 
                     HttpSession session = request.getSession(); //Creating a session
                     session.setAttribute("Admin", login); //setting session attribute
                     request.setAttribute("login", login);
-
                     request.getRequestDispatcher("/Views/Admin.jsp").forward(request, response);
+                    break;
                 }
                 case 2: {
-                    System.out.println("User's Home");
+                    //System.out.println("User's Home");
 
                     HttpSession session = request.getSession();
                     session.setMaxInactiveInterval(10*60);
@@ -47,12 +47,13 @@ public class LoginServlet extends HttpServlet {
                     request.setAttribute("login", login);
 
                     request.getRequestDispatcher("/Views/User.jsp").forward(request, response);
+                    break;
                 }
                 default:{
-                    System.out.println("Error message = Wrong login or password");
+                    //System.out.println("Error message = Wrong login or password");
                     request.setAttribute("errMessage", "Wrong login or password");
-
                     request.getRequestDispatcher("/Views/Authpage.jsp").forward(request, response);
+                    break;
                 }
             }
         } catch (Exception e2) {
