@@ -19,9 +19,8 @@ public abstract class BaseDAO {
     protected void RegisterDriverManager() {
         try {
             Class.forName(driver).newInstance();
-        } catch (InstantiationException e) {e.printStackTrace();
-        } catch (IllegalAccessException e) {e.printStackTrace();
-        } catch (ClassNotFoundException e) {e.printStackTrace();}
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {e.printStackTrace();
+        }
     }
     /**
      * Процедура определения строки подключения URL к серверу БД
@@ -38,13 +37,6 @@ public abstract class BaseDAO {
         properties.setProperty("user", login);
         properties.setProperty("useUnicode", "true");
         properties.setProperty("characterEncoding", "utf8");
-    }
-
-    public void Disconnect (Connection connection) {
-        try {
-            connection.close();
-            connection = null;
-        } catch (SQLException e) {}
     }
 
     /**

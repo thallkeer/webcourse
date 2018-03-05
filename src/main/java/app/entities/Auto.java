@@ -8,7 +8,8 @@ public class Auto implements Serializable {
 
     private String brand;
 
-    private Integer consumption;
+
+    private Integer consumption; //норма расхода литров на 100км
 
     public Auto(Integer auto_id, String brand, Integer consumption) {
         this.auto_id = auto_id;
@@ -39,4 +40,15 @@ public class Auto implements Serializable {
     public void setConsumption(Integer consumption) {
         this.consumption = consumption;
     }
+
+
+    /**
+     * @param benzprice цена за литр бензина
+     * @param distance расстояние, которое проехал автомобиль
+     * @return
+     */
+    public int getsum(int benzprice,int distance){
+        return benzprice*this.consumption*distance/100;
+    }
+
 }

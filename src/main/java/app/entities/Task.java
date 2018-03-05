@@ -1,67 +1,71 @@
 package app.entities;
 
-
-import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
-@Table(name = "task")
+
 public class Task implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "task_id")
     private Integer task_id;
-
-    @ManyToOne (fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn (name="task_id")
-    private Task ptask_id;
-
-    @Column(name = "description")
+    private Task parent_task;
     private String description;
+    private String organization;
 
-    @Column(name = "org_name")
-    private String organisation;
+    public Task(){
+
+    }
+
+    public Task(Integer task_id,Task parent_task,String description){
+        this.task_id=task_id;
+        this.parent_task=parent_task;
+        this.description = description;
+    }
+
+    public Task(Integer task_id,Task parent_task,String description,String organization){
+        this.task_id=task_id;
+        this.parent_task=parent_task;
+        this.description = description;
+        this.organization=organization;
+    }
 
     public Integer getTask_id() {
         return task_id;
     }
 
-    public void setTask_id(final Integer task_id) {
+    public void setTask_id(Integer task_id) {
         this.task_id = task_id;
-    }
-
-    public Task getPtask_id() {
-        return ptask_id;
-    }
-
-    public void setPtask_id(Task ptask_id) {
-        this.ptask_id = ptask_id;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(final String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getOrganisation() {
-        return organisation;
+    public String getOrganization() {
+        return organization;
     }
 
-    public void setOrganisation(final String organisation) {
-        this.organisation = organisation;
+    public void setOrganization(String organisation) {
+        this.organization = organisation;
     }
 
     @Override
     public String toString() {
         return "Task{" +
                 "task_id=" + task_id +
-                ", ptask_id='" + ptask_id + '\'' +
+                ", parent_task='" + parent_task.task_id + '\'' +
                 ", description='" + description + '\'' +
-                ", organisation='" + organisation + '\'' +
+                ", organization='" + organization + '\'' +
                 '}';
+    }
+
+    public Task getParent_task() {
+        return parent_task;
+    }
+
+    public void setParent_task(Task parent_task) {
+        this.parent_task = parent_task;
     }
 }

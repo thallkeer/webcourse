@@ -4,28 +4,14 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-@Entity
-@Table(name = "employee")
+
 public class Employee implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "employee_id")
     private Integer employee_id;
-
-    @Column(name = "login")
     private String login;
-
-    @Column(name = "password")
     private String password;
-
-    @Column(name = "fio")
     private String fio;
-
-    @Column(name="auth_lvl")
     private Integer auth_lvl;
-
-    @OneToMany (fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     private List<Outgo> outgoes;
 
     public Employee(String login, String password , String fio, Integer auth_lvl) {
@@ -58,7 +44,7 @@ public class Employee implements Serializable {
         return employee_id;
     }
 
-    public void setEmployee_id(final Integer employee_id) {
+    public void setEmployee_id(Integer employee_id) {
         this.employee_id = employee_id;
     }
 
@@ -66,7 +52,7 @@ public class Employee implements Serializable {
         return login;
     }
 
-    public void setLogin(final String login) {
+    public void setLogin(String login) {
         this.login = login;
     }
 
@@ -74,7 +60,7 @@ public class Employee implements Serializable {
         return password;
     }
 
-    public void setPassword(final String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -82,16 +68,23 @@ public class Employee implements Serializable {
         return fio;
     }
 
-    public void setFio(final String fio) {
+    public void setFio(String fio) {
         this.fio = fio;
     }
-
 
     public Integer getAuth_lvl() {
         return auth_lvl;
     }
 
-    public void setAuth_lvl(final Integer auth_lvl) {
+    public void setAuth_lvl(Integer auth_lvl) {
         this.auth_lvl = auth_lvl;
+    }
+
+    public List<Outgo> getOutgoes() {
+        return outgoes;
+    }
+
+    public void setOutgoes(List<Outgo> outgoes) {
+        this.outgoes = outgoes;
     }
 }

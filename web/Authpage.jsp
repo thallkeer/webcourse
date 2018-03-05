@@ -4,15 +4,12 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Авторизация</title>
-    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/style.css"/>
 </head>
 <body>
 <div class="cont">
-<form name="form" action="<%=request.getContextPath()%>
-/LoginServlet" method="post">
-
+<form name="form" action="<%=request.getContextPath()%>/LoginServlet" method="post">
     <table align="center">
-
         <tr>
             <td>Username</td>
             <td><input type="text" name="login" /></td>
@@ -26,7 +23,7 @@
         </tr>
         <tr>
             <td></td>
-            <td><input type="submit" value="Login"></input><input type="reset" value="Reset"></input></td>
+            <td><input type="submit" value="Login"/><input type="reset" value="Reset"/></td>
         </tr>
     </table>
 </form>

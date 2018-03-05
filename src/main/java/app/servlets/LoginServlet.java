@@ -1,7 +1,7 @@
 package app.servlets;
 
 import app.dao.impl.PostgresDAO;
-import app.dao.impl.EmployeeBeanDAO;
+import app.dao.impl.EmployeeDAO;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -22,7 +22,7 @@ public class LoginServlet extends HttpServlet {
         PostgresDAO dao = new PostgresDAO();
         dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
         dao.Connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
-        EmployeeBeanDAO userBean = new EmployeeBeanDAO(dao);
+        EmployeeDAO userBean = new EmployeeDAO(dao);
 
 
         try {
@@ -35,7 +35,7 @@ public class LoginServlet extends HttpServlet {
                     HttpSession session = request.getSession(); //Creating a session
                     session.setAttribute("Admin", login); //setting session attribute
                     request.setAttribute("login", login);
-                    request.getRequestDispatcher("/Views/Admin.jsp").forward(request, response);
+                    request.getRequestDispatcher("Admin.jsp").forward(request, response);
                     break;
                 }
                 case 2: {
@@ -46,13 +46,13 @@ public class LoginServlet extends HttpServlet {
                     session.setAttribute("User", login);
                     request.setAttribute("login", login);
 
-                    request.getRequestDispatcher("/Views/User.jsp").forward(request, response);
+                    request.getRequestDispatcher("User.jsp").forward(request, response);
                     break;
                 }
                 default:{
                     //System.out.println("Error message = Wrong login or password");
                     request.setAttribute("errMessage", "Wrong login or password");
-                    request.getRequestDispatcher("/Views/Authpage.jsp").forward(request, response);
+                    request.getRequestDispatcher("Authpage.jsp").forward(request, response);
                     break;
                 }
             }

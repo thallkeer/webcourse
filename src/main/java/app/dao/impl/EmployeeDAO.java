@@ -1,6 +1,6 @@
 package app.dao.impl;
 
-import app.dao.EmployeeDAO;
+import app.dao.IEmployeeDAO;
 import app.entities.Employee;
 
 import javax.ejb.Stateful;
@@ -8,12 +8,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Stateful
-public class EmployeeBeanDAO implements EmployeeDAO {
+public class EmployeeDAO implements IEmployeeDAO {
     private PostgresDAO dao;
 
-    public EmployeeBeanDAO(){}
+    public EmployeeDAO(){}
 
-    public EmployeeBeanDAO(PostgresDAO dao){
+    public EmployeeDAO(PostgresDAO dao){
         this.dao = dao;
     }
 
@@ -56,9 +56,9 @@ public class EmployeeBeanDAO implements EmployeeDAO {
                 password));
         try {
             if (resultSet.next()) {
-                employee.setEmployee_id(resultSet.getInt(Fields.USER_ID));
-                employee.setFio(resultSet.getString(Fields.FIO));
-                employee.setAuth_lvl(resultSet.getInt(Fields.AUTH_LVL));
+                employee.setEmployee_id(resultSet.getInt(USER_ID));
+                employee.setFio(resultSet.getString(FIO));
+                employee.setAuth_lvl(resultSet.getInt(AUTH_LVL));
                 return employee;
             }
         } catch (SQLException e) {
@@ -74,9 +74,9 @@ public class EmployeeBeanDAO implements EmployeeDAO {
             while (resultSet.next())
             {
                 employee.setEmployee_id(id);
-                employee.setLogin(resultSet.getString(Fields.LOGIN));
-                employee.setPassword(resultSet.getString(Fields.PASSWORD));
-                employee.setAuth_lvl(resultSet.getInt(Fields.AUTH_LVL));
+                employee.setLogin(resultSet.getString(LOGIN));
+                employee.setPassword(resultSet.getString(PASSWORD));
+                employee.setAuth_lvl(resultSet.getInt(AUTH_LVL));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -105,6 +105,6 @@ public class EmployeeBeanDAO implements EmployeeDAO {
     }
 
     public void delete(int id) {
-        dao.execute(String.format("delete from employee where employee_id = " + id));
+        dao.execute(String.format("delete from employee where employee_id = '%1$s'",id));
     }
 }

@@ -38,25 +38,4 @@ public class PostgresDAO extends BaseDAO {
             connection = null;
         }
     }
-
-    public ResultSet selectTable(String table){
-        return execSQL("select * from " + table);
-    }
-
-    public int getMaxId(String table, String id){
-        ResultSet resultSet =execSQL(String.format("SELECT %1$s \n" +
-                        "FROM %2$s \n" +
-                        "ORDER BY %1$s DESC \n" +
-                        "LIMIT 1",
-                id,
-                table)
-        );
-        try {
-            if ( resultSet.next())
-                return resultSet.getInt(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
 }
