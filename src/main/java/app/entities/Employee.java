@@ -14,6 +14,14 @@ public class Employee implements Serializable {
     private Integer auth_lvl;
     private List<Outgo> outgoes;
 
+    public Employee(Integer employee_id,String login, String password , String fio, Integer auth_lvl) {
+        this.employee_id = employee_id;
+        this.login = login;
+        this.password = password;
+        this.fio = fio;
+        this.auth_lvl = auth_lvl;
+    }
+
     public Employee(String login, String password , String fio, Integer auth_lvl) {
         this.login = login;
         this.password = password;

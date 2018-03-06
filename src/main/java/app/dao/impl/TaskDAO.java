@@ -26,25 +26,21 @@ public class TaskDAO implements ITaskDAO {
         ResultSet resultSet = dao.execSQL(String.format("SELECT t.task_id,t.ptask_id,t.description,summ FROM outgo o " +
                 "left join (select employee_id,login from employee) as e on e.employee_id=o.emp_id " +
                 "left join (select task_id,ptask_id,description from task) as t on t.task_id=o.task_id where login='%1$s'",login));
-        if (CreateAndReturn(tasks, resultSet)) return tasks;
-        return null;
-    }
-
-    private boolean CreateAndReturn(List<Task> tasks, ResultSet resultSet) {
         try {
             while (resultSet.next())
             {
-               Task tmptask = new Task();
-               tmptask.setTask_id(resultSet.getInt("task_id"));
-               tmptask.setDescription(resultSet.getString("description"));
-               tasks.add(tmptask);
+                Task tmptask = new Task();
+                tmptask.setDescription(resultSet.getString("description"));
+                tmptask.setTask_id(resultSet.getInt("task_id"));
+                tasks.add(tmptask);
             }
-            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return tasks;
     }
+
+
 
     @Override
     public List<Task> getTasksByLvl(Integer lvl) {
@@ -52,38 +48,45 @@ public class TaskDAO implements ITaskDAO {
     }
 
 
-
     @Override
     public List<Task> getTasksByParentId(Integer parent_id) {
-        List<Task> tasks = new ArrayList<Task>();
-        ResultSet resultSet = dao.execSQL(String.format("SELECT t.description,summ FROM outgo o " +
-                "left join (select employee_id,login from employee) as e on e.employee_id=o.emp_id " +
-                "left join (select task_id,ptask_id,description from task) as t on t.task_id=o.task_id where ptask_id='%1$s'",parent_id));
-        if (CreateAndReturn(tasks, resultSet)) return tasks;
+        return null;
+    }
+
+
+    public List<String> getParents(){
+        List<String> descrs = new ArrayList<String>();
+        ResultSet rs = dao.execSQL("Select description from task where ptask_id IS NULL");
+        try {
+            while (rs.next())
+            {
+                descrs.add( rs.getString("description"));
+            }
+            return descrs;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
-    public List<String> getTaskDescriptionByLvl(Integer lvl) {
+    public List<String> getDescriptionByIdLvl(Integer task_id,Integer lvl) {
         List<String> descrs = new ArrayList<String>();
-        ResultSet rs = dao.execSQL(String.format("WITH RECURSIVE r AS (\n" +
-                "SELECT task_id, ptask_id, description, 1 AS level\n" +
-                "FROM task\n" +
-                "WHERE task_id = 1\n" +
-                "\n" +
-                "UNION ALL\n" +
-                "\n" +
-                "SELECT task.task_id, task.ptask_id, task.description, r.level + 1 AS level\n" +
-                "FROM task\n" +
-                "JOIN r\n" +
-                "ON task.ptask_id = r.task_id\n" +
-                "  WHERE r.level < '%1$s'\n" +
-                ")\n" +
-                "\n" +
-                "SELECT * FROM r;",lvl));
+        ResultSet rs = dao.execSQL(String.format("WITH RECURSIVE r AS (" +
+                " SELECT task_id, ptask_id, description, 1 AS level" +
+                " FROM task" +
+                " WHERE task_id = '%1$s'"+
+                " UNION ALL" +
+                " SELECT task.task_id, task.ptask_id, task.description, r.level + 1 AS level" +
+                " FROM task" +
+                " JOIN r" +
+                " ON task.ptask_id = r.task_id" +
+                "  WHERE r.level < '%2$s')" +
+                " SELECT * FROM r",task_id,lvl));
         try {
             while (rs.next())
             {
+                if(rs.getInt("level")!=1)
                 descrs.add( rs.getString("description"));
             }
             return descrs;

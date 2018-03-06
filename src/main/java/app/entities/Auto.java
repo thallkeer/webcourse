@@ -8,7 +8,6 @@ public class Auto implements Serializable {
 
     private String brand;
 
-
     private Integer consumption; //норма расхода литров на 100км
 
     public Auto(Integer auto_id, String brand, Integer consumption) {

@@ -8,7 +8,7 @@
 <body>
 <ul>
     <li><a href="Outgoes.jsp">Расходы</a></li>
-    <li><a href="#news">Новости</a></li>
+    <li><a href="Tasks.jsp">Проекты</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#about">About</a></li>
     <li id="li06"><div style="text-align: right"><a href="<%=request.getContextPath()%>/LogoutServlet">Logout</a></div></li>

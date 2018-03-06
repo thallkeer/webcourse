@@ -6,6 +6,8 @@ import app.entities.Employee;
 import javax.ejb.Stateful;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Stateful
 public class EmployeeDAO implements IEmployeeDAO {
@@ -35,16 +37,18 @@ public class EmployeeDAO implements IEmployeeDAO {
     }
 
     @Override
-    public boolean addUser(Employee employee) {
-        if (getUser(employee.getLogin()) == null) {
-            dao.execute(String.format("INSERT INTO employee(" +
-                            "login, password, fio) values('%1$s','%2$s','%3$s')",
-                    employee.getLogin(),
-                    employee.getPassword(),
-                    employee.getFio()));
-            return true;
-        } else
-            return false;
+    public void addUser(Employee employee) {
+        dao.execute(String.format("INSERT INTO employee(" +
+                        "login, password, fio,auth_lvl) values('%1$s','%2$s','%3$s','%4$s')",
+                employee.getLogin(),
+                employee.getPassword(),
+                employee.getFio(),
+                employee.getAuth_lvl()));
+    }
+
+    public boolean isUserExists(String login){
+        ResultSet rs = dao.execSQL(String.format("Select * from employee where login='%1$s'",login));
+        return rs==null;
     }
 
 
@@ -76,16 +80,42 @@ public class EmployeeDAO implements IEmployeeDAO {
                 employee.setEmployee_id(id);
                 employee.setLogin(resultSet.getString(LOGIN));
                 employee.setPassword(resultSet.getString(PASSWORD));
+                employee.setFio(resultSet.getString(FIO));
                 employee.setAuth_lvl(resultSet.getInt(AUTH_LVL));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return employee;
+    }
+
+    @Override
+    public Integer getIdByLogin(String login) {
+        ResultSet rs = dao.execSQL(String.format("select employee_id from employee where login='%1$s'",login));
+        try {
+            rs.next();
+            return rs.getInt("employee_id");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public Employee getUser(String login) {
-        return null;
+        Employee employee = new Employee();
+        ResultSet rs = dao.execSQL(String.format("select * from employee where login='%1$s'",login));
+        try {
+            while (rs.next()){
+                employee.setEmployee_id(rs.getInt("employee_id"));
+                employee.setLogin(rs.getString("login"));
+                employee.setFio(rs.getString("fio"));
+                employee.setAuth_lvl(rs.getInt("auth_lvl"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return employee;
     }
 
     public void update(int id, Employee employee) {
@@ -106,5 +136,22 @@ public class EmployeeDAO implements IEmployeeDAO {
 
     public void delete(int id) {
         dao.execute(String.format("delete from employee where employee_id = '%1$s'",id));
+    }
+
+    @Override
+    public List<Employee> getAll() {
+        List<Employee> employees = new ArrayList<>();
+        ResultSet rs = dao.execSQL("select * from employee");
+        Employee emp;
+        try {
+        while (rs.next()){
+            emp = new Employee(rs.getInt("employee_id"),rs.getString("login"),rs.getString("password"),
+                    rs.getString("fio"),rs.getInt("auth_lvl"));
+            employees.add(emp);
+        }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return employees;
     }
 }

@@ -2,6 +2,9 @@ package app.dao;
 
 import app.entities.Employee;
 
+import java.sql.SQLException;
+import java.util.List;
+
 public interface IEmployeeDAO {
     String USER_ID = "employee_id";
     String LOGIN = "login";
@@ -10,11 +13,14 @@ public interface IEmployeeDAO {
     String FIO = "fio";
 
     public int authenticateUser(String login, String password);
-    public boolean addUser(Employee employee);
+    public void addUser(Employee employee);
     public Employee getUser(String login, String password);
     public Employee getUser(int id);
     public Employee getUser(String login);
+    public Integer getIdByLogin(String login);
     public void update(int id, Employee employee);
     public void delete(Employee employee);
     public  void delete(int id);
+    public boolean isUserExists(String login);
+    public List<Employee> getAll() throws SQLException;
 }
