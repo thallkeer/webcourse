@@ -5,13 +5,7 @@
 <%@ page import="app.dao.impl.PostgresDAO" %>
 <%@ page import="app.dao.impl.EmployeeDAO" %>
 <%@ page import="app.entities.Employee" %>
-<%@ page import="app.dao.IEmployeeDAO" %><%--
-  Created by IntelliJ IDEA.
-  User: kir73
-  Date: 03.03.2018
-  Time: 15:55
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="app.dao.IEmployeeDAO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
@@ -21,125 +15,85 @@
     PostgresDAO dao = new PostgresDAO();
     dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
     dao.Connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
+    ITaskDAO taskDAO = new TaskDAO(dao);
 %>
+
 <head>
     <title>Расходы</title>
     <link rel="stylesheet" type="text/css" href="resources/fortest.css"/>
     <script type="text/javascript" src="resources/linkedselect.js"></script>
 </head>
 
-<body>
-    <form action="<%=request.getContextPath()%>/AddOutgoServlet" method="post">
-        <fieldset>
-            <!-- Первый (главный) список (изначально заполнен вручную) -->
-            <select id="List1" onchange="getSelectedValue()">
-                <%
-                    List<String> descrs = taskDAO.getParents();
-                    int size = descrs.size()-1;
-                %>
-                <% for (int i = size;i>=0;i--){%>
-                <option value=<%=descrs.get(i)%>><%=descrs.get(i)%></option>
-                <%}%>
-            </select>
-            <script>
 
-                function getSelectedValue() {
-                    var selectedValue = document.getElementById("List1").value;
 
-                }
-            </script>
 
-            <!-- Подчиненный список 1 (изначально пуст) -->
-            <select id="List2"></select>
+<form  action="/ChangeOptions" method="post">
 
-            <!-- Подчиненный список 2 (изначально пуст) -->
-            <select id="List3"></select>
+<select id="first" name="firstchoice" onload="this.selectedIndex=0" onchange="localStorage.firstindex=this.selectedIndex; if (this.selectedIndex) this.form.submit()">
+    <option selected disabled>Выберите расход</option>
+    <% List<String> descs = taskDAO.getParents();
+        for (int i=0;i<descs.size();i++) {
+    %>
+    <option value="<%=i%>"><%=descs.get(i)%></option>
+    <%}%>
+    <input name="hiden" id="hiden" type="hidden" value="false">
+   </select>
+    <script>
+        //восстанавливаем запомненное значение, если есть
+            if(localStorage.firstindex!==undefined ) {
+                document.getElementById("first").selectedIndex = localStorage.firstindex;
+                localStorage.clear()
+                document.getElementById("hiden").value = "true";
+            }
+    </script>
 
-            <script type="text/javascript">
-                // Создаем новый объект связанных списков
-                var syncList1 = new syncList;
+<select id="second" name="secondchoice" onload="this.selectedIndex=0" onchange="localStorage.secondindex=this.selectedIndex; if (this.selectedIndex) this.form.submit()">
+        <option disabled>Выбрать</option>
+         <%
+             List<String> list = (List<String>)request.getAttribute("descs2");
+             if (list!=null){
+                 for (int i=0;i<list.size();i++) {
+         %>
+            <option value="<%=i%>"><%=list.get(i)%></option>
+         <%}}%>
+</select>
+    <script>
+        // if(localStorage.secondindex!==undefined ) {
+        //     document.getElementById("second").selectedIndex = localStorage.secondindex;
+        //     localStorage.clear() }
+    </script>
 
-                // Определяем значения подчиненных списков (2 и 3 селектов)
-                syncList1.dataList = {
+    <select id="third"  name="thirdchoice">
+        <option disabled>Выбрать</option>
+        <%
+            List<String> listthird = (List<String>)request.getAttribute("descs3");
+            if (listthird!=null){
+                for (int i=0;i<listthird.size();i++) {
+        %>
+        <option value="<%=i%>"><%=listthird.get(i)%></option>
+        <%}}%>
+    </select>
+</form>
 
-                    /* Определяем элементы второго списка в зависимости
-                    от выбранного значения в первом списке */
-                    'Проект':{
-                        'ie_win':'Windows',
-                        'ie_mac':'Mac',
+<script>
+    var syncList1 = new syncList;
 
-                    },
+    syncList().dataList={
+        'Проект':{
+            'win':'Windows',
+            'mac':'Mac'
+        },
 
-                    'safari':{
-                        'safari_mac':'Mac'
-                    },
+        'Офис':{
+            'safari_mac':'Macс'
+        }
+    };
+    syncList1.sync("first","second","third");
 
-                    /* Определяем элементы третьего списка в зависимости
-                    от выбранного значения во втором списке */
-
-                    'ie_win':{
-                        'ie_win_5':'версия 5',
-                        'ie_win_6':'версия 6'
-                    },
-
-                    'ie_mac':{
-                        'ie_mac_5':'версия 5'
-                    },
-
-                    'safari_mac':{
-                        'safari_mac_1':'версия 1',
-                        'safari_mac_2':'версия 2'
-                    }
-                };
-
-                // Включаем синхронизацию связанных списков
-                syncList1.sync("List1","List2","List3");
-            </script>
-    <%--<select id="first-choice">--%>
-        <%--<%--%>
-            <%--List<String> descrs = taskDAO.getParents();--%>
-            <%--int size = descrs.size()-1;--%>
-        <%--%>--%>
-        <%--<% for (int i = size;i>=0;i--){%>--%>
-        <%--<option value=<%=descrs.get(i)%>><%=descrs.get(i)%></option>--%>
-        <%--<%}%>--%>
-    <%--</select>--%>
-    <%--<br>--%>
-    <%--<select id="second-choice">--%>
-        <%--var objSel = document.myForm.mySelect;--%>
-    <%--</select>--%>
-            <%--<br>--%>
-    <%--<input type="submit" >--%>
-        </fieldset>
-    </form>
+</script>
 
 <table align="center" border="1">
     <caption>Расходы сотрудника <%=login%></caption>
-    <thead>
-    <td>Расход</td>
-    <td>Сумма</td>
-    </thead>
-    <% for (String desc :
-            ) {
-    %>
-    <tbody>
-    <tr>
-        <td><%= emp.getEmployee_id() %>
-        </td>
-        <td><%= emp.getLogin() %>
-        </td>
-        <td><%= emp.getPassword() %>
-        </td>
-        <td><%= emp.getFio() %>
-        </td>
-        <td><%= emp.getAuth_lvl() %>
-        </td>
-        <td>Тут что-то будет</td>
-        <td><a href="EditUser.jsp?emp_id=<%=emp.getEmployee_id()%>">Редактировать</a></td>
-        <td><a href="/DeleteUser?emp_id=<%=emp.getEmployee_id()%>">Удалить</a></td>
-    </tr>
-    </tbody>
-    <% }%>
 </table>
 </body>
 </html>

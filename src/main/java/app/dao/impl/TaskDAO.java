@@ -49,23 +49,34 @@ public class TaskDAO implements ITaskDAO {
 
 
     @Override
-    public List<Task> getTasksByParentId(Integer parent_id) {
+    public List<String> getTasksByParentId(Integer parent_id) {
         return null;
+    }
+
+    public List<String> getNextLvl(int ptask_id){
+        List<String> descs = new ArrayList<>();
+        ResultSet rs = dao.execSQL(String.format("Select description from task where ptask_id = '%1$s'",ptask_id));
+        if (addDescription(descs, rs)) return descs;
+        return null;
+    }
+
+    private boolean addDescription(List<String> descs, ResultSet rs) {
+        try {
+            while (rs.next()) {
+                descs.add(rs.getString("description"));
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 
     public List<String> getParents(){
         List<String> descrs = new ArrayList<String>();
         ResultSet rs = dao.execSQL("Select description from task where ptask_id IS NULL");
-        try {
-            while (rs.next())
-            {
-                descrs.add( rs.getString("description"));
-            }
-            return descrs;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        if (addDescription(descrs, rs)) return descrs;
         return null;
     }
 
