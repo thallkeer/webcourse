@@ -21,7 +21,7 @@ public class ChangeOptionsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int selectedfirstIndex = Integer.valueOf(req.getParameter("firstchoice"));
-//        String canGet = req.getParameter("hiden");
+       String canGet = req.getParameter("hiden");
 //        int selectedsecondIndex = 1;
 //        if(canGet.equals("true"))
 //            selectedsecondIndex= Integer.parseInt(Objects.requireNonNull(req.getParameter("secondchoice")));

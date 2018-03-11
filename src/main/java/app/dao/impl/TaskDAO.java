@@ -5,8 +5,7 @@ import app.entities.Task;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class TaskDAO implements ITaskDAO {
     PostgresDAO dao;
@@ -72,6 +71,11 @@ public class TaskDAO implements ITaskDAO {
         return false;
     }
 
+    public Map<String,String> getDescriptionsForParent(Integer task_id){
+        Map<String,String> res = new HashMap<>();
+        ResultSet rs = dao.execSQL("Select description from task where ptask_id IS NULL");
+        return null;
+    }
 
     public List<String> getParents(){
         List<String> descrs = new ArrayList<String>();
