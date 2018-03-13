@@ -12,11 +12,9 @@
 <html>
 <%
     Integer emp_id = Integer.valueOf(request.getParameter("emp_id"));
-    PostgresDAO dao = new PostgresDAO();
-    dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
-    dao.Connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
-    IEmployeeDAO empDAO = new EmployeeDAO(dao);
+    IEmployeeDAO empDAO = new EmployeeDAO((PostgresDAO) session.getAttribute("dao"));
     Employee emp = empDAO.getUser(emp_id);
+    request.setAttribute("editingEmp",emp);
 %>
 <head>
     <title>Редактирование пользователя</title>

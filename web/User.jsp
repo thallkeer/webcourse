@@ -12,11 +12,8 @@
     <li><a href="#contact">Contact</a></li>
     <li><a href="#about">About</a></li>
     <li id="li06"><div style="text-align: right"><a href="<%=request.getContextPath()%>/LogoutServlet">Logout</a></div></li>
-    <li id="li05">Welcome <%=request.getAttribute("login") %></li>
+    <li id="li05">Welcome <%=session.getAttribute("login") %></li>
+    <li id="li04"><h2>User's Home</h2></li>
 </ul>
-<div style="text-align: center;"><h2>User's Home</h2></div>
-
-
-
 </body>
 </html>

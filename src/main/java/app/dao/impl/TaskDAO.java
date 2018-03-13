@@ -9,7 +9,6 @@ import java.util.*;
 
 public class TaskDAO implements ITaskDAO {
     PostgresDAO dao;
-
     public TaskDAO(){
 
     }
@@ -39,26 +38,6 @@ public class TaskDAO implements ITaskDAO {
         return tasks;
     }
 
-
-
-    @Override
-    public List<Task> getTasksByLvl(Integer lvl) {
-        return null;
-    }
-
-
-    @Override
-    public List<String> getTasksByParentId(Integer parent_id) {
-        return null;
-    }
-
-    public List<String> getNextLvl(int ptask_id){
-        List<String> descs = new ArrayList<>();
-        ResultSet rs = dao.execSQL(String.format("Select description from task where ptask_id = '%1$s'",ptask_id));
-        if (addDescription(descs, rs)) return descs;
-        return null;
-    }
-
     private boolean addDescription(List<String> descs, ResultSet rs) {
         try {
             while (rs.next()) {
@@ -71,10 +50,42 @@ public class TaskDAO implements ITaskDAO {
         return false;
     }
 
-    public Map<String,String> getDescriptionsForParent(Integer task_id){
-        Map<String,String> res = new HashMap<>();
-        ResultSet rs = dao.execSQL("Select description from task where ptask_id IS NULL");
+    public Map<Integer,String> getNextLvl(Integer task_id){
+        Map<Integer,String> res = new HashMap<>();
+        ResultSet rs = dao.execSQL(String.format("Select task_id,description from task where ptask_id = '%1$s'",task_id));
+        try {
+            while (rs.next())
+            {
+                    res.put(rs.getInt("task_id"),rs.getString("description"));
+            }
+            return res;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
+    }
+
+
+    @Override
+    public List<Task> getAll() {
+        List<Task> taskList = new ArrayList<>();
+        ResultSet rs = dao.execSQL("select * from task ORDER BY task_id ASC");
+        Task task;
+        try {
+            while (rs.next()){
+                if (rs.getInt("ptask_id")==0) {
+                    task = new Task(rs.getInt("task_id"), 0, rs.getString("description"));
+                }
+                else{
+
+                    task = new Task(rs.getInt("task_id"),rs.getInt("ptask_id") , rs.getString("description"));
+                }
+                taskList.add(task);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return taskList;
     }
 
     public List<String> getParents(){
@@ -85,8 +96,8 @@ public class TaskDAO implements ITaskDAO {
     }
 
     @Override
-    public List<String> getDescriptionByIdLvl(Integer task_id,Integer lvl) {
-        List<String> descrs = new ArrayList<String>();
+    public Map<Integer,String> getDescriptionByTaskId(Integer task_id) {
+        Map<Integer,String> res = new HashMap<>();
         ResultSet rs = dao.execSQL(String.format("WITH RECURSIVE r AS (" +
                 " SELECT task_id, ptask_id, description, 1 AS level" +
                 " FROM task" +
@@ -95,20 +106,33 @@ public class TaskDAO implements ITaskDAO {
                 " SELECT task.task_id, task.ptask_id, task.description, r.level + 1 AS level" +
                 " FROM task" +
                 " JOIN r" +
-                " ON task.ptask_id = r.task_id" +
-                "  WHERE r.level < '%2$s')" +
-                " SELECT * FROM r",task_id,lvl));
+                " ON task.ptask_id = r.task_id)" +
+                " SELECT * FROM r",task_id));
         try {
             while (rs.next())
             {
-                if(rs.getInt("level")!=1)
-                descrs.add( rs.getString("description"));
+                if(rs.getInt("level")!=1){
+                    res.put(rs.getInt("task_id"),rs.getString("description"));
+                }
+
             }
-            return descrs;
+            return res;
         } catch (SQLException e) {
             e.printStackTrace();
         }
       return null;
+    }
+
+    //По айдишнику родителя, находит у него родителей и тд
+    public Task getTasksTree(Integer id) throws SQLException {
+        ResultSet rs = dao.execSQL(String.format("select task_id,ptask_id,description from task where task_id='%1$s'", id));
+        Task task = null;
+        while (rs.next()) {
+            if (rs.getInt("ptask_id") != 0)
+                getTasksTree(rs.getInt("ptask_id"));
+            else task = new Task(rs.getInt("task_id"), rs.getInt("ptask_id"), rs.getString("description"));
+        }
+        return task;
     }
 
 }

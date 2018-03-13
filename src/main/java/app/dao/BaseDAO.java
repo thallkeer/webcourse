@@ -29,6 +29,7 @@ public abstract class BaseDAO {
 
     public abstract Connection getConnection ();
 
+
     public void Connect (String login, String password) {
         RegisterDriverManager();
 

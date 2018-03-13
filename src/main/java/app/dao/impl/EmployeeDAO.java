@@ -118,17 +118,19 @@ public class EmployeeDAO implements IEmployeeDAO {
         return employee;
     }
 
-    public void update(int id, Employee employee) {
-        dao.execute(String.format("update employee set login = '%1$s', password = '%2$s'" +
-                        "where user_id = %3$s ",
+    public void updateUser(Employee employee) {
+        dao.execute(String.format("update employee set login = '%1$s', password = '%2$s', fio = '%3$s'," +
+                        " auth_lvl = '%4$s' where employee_id = %5$s",
                employee.getLogin(),
                 employee.getPassword(),
+                employee.getFio(),
+                employee.getAuth_lvl(),
                 employee.getEmployee_id())
         );
 
     }
 
-    public void delete(Employee employee) {
+    public void deleteUser(Employee employee) {
         dao.execute(String.format("delete from employee where login = '%1$s' and password = '%2$s'",
                 employee.getLogin(),
                 employee.getPassword()));

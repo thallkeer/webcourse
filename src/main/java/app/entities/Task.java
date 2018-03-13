@@ -1,12 +1,10 @@
 package app.entities;
 
-import java.io.Serializable;
-
-
-public class Task implements Serializable {
+public class Task {
 
     private Integer task_id;
-    private Task parent_task;
+    private Integer ptask_id;
+//    private Task parent_task;
     private String description;
     private String organization;
     private boolean isArchival;
@@ -16,15 +14,15 @@ public class Task implements Serializable {
 
     }
 
-    public Task(Integer task_id,Task parent_task,String description){
+    public Task(Integer task_id,Integer ptask_id,String description){
         this.task_id=task_id;
-        this.parent_task=parent_task;
+        this.ptask_id=ptask_id;
         this.description = description;
     }
 
-    public Task(Integer task_id,Task parent_task,String description,String organization,boolean isArchival){
+    public Task(Integer task_id,Integer ptask_id,String description,String organization,boolean isArchival){
         this.task_id=task_id;
-        this.parent_task=parent_task;
+        this.ptask_id=ptask_id;
         this.description = description;
         this.organization=organization;
         this.isArchival = isArchival();
@@ -58,19 +56,19 @@ public class Task implements Serializable {
     public String toString() {
         return "Task{" +
                 "task_id=" + task_id +
-                ", parent_task='" + parent_task.task_id + '\'' +
+                ", parent_task='" + ptask_id + '\'' +
                 ", description='" + description + '\'' +
                 ", organization='" + organization + '\'' +
                 '}';
     }
 
-    public Task getParent_task() {
-        return parent_task;
-    }
-
-    public void setParent_task(Task parent_task) {
-        this.parent_task = parent_task;
-    }
+//    public Task getParent_task() {
+//        return parent_task;
+//    }
+//
+//    public void setParent_task(Task parent_task) {
+//        this.parent_task = parent_task;
+//    }
 
     public boolean isArchival() {
         return isArchival;
@@ -78,5 +76,13 @@ public class Task implements Serializable {
 
     public void setArchival(boolean archival) {
         isArchival = archival;
+    }
+
+    public Integer getPtask_id() {
+        return ptask_id;
+    }
+
+    public void setPtask_id(Integer ptask_id) {
+        this.ptask_id = ptask_id;
     }
 }

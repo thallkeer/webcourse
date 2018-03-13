@@ -1,6 +1,7 @@
 package app.dao.impl;
 
 import app.dao.BaseDAO;
+import org.postgresql.Driver;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

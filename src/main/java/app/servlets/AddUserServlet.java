@@ -15,29 +15,27 @@ import java.io.IOException;
 @WebServlet("/AddUser")
 public class AddUserServlet extends HttpServlet {
 
-//    @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        req.getRequestDispatcher("Admin.jsp").forward(req, resp);
-//    }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String login= request.getParameter("login");
         String password= request.getParameter("password");
         String fio= request.getParameter("fio");
-        Integer auth_lvl= Integer.valueOf(request.getParameter("auth_lvl"));
+        Integer auth_lvl=-1;
+        if (!request.getParameter("auth_lvl").equals("")) {
+            auth_lvl = Integer.valueOf(request.getParameter("auth_lvl"));
+        }
 
-        HttpSession session = request.getSession();
-        PostgresDAO dao = new PostgresDAO();
-        dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
-        dao.Connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
-        EmployeeDAO empDAO = new EmployeeDAO(dao);
+        if (!login.equals("") && !password.equals("") && auth_lvl!=-1) {
+            HttpSession session = request.getSession();
+            PostgresDAO dao = new PostgresDAO();
+            dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
+            dao.Connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
+            EmployeeDAO empDAO = new EmployeeDAO(dao);
 
-
-        Employee newEmp = new Employee(login,password,fio,auth_lvl);
-        if(!empDAO.isUserExists(newEmp.getLogin()))
-        {
-            empDAO.addUser(newEmp);
-            request.getRequestDispatcher("Admin.jsp").forward(request, response);
+            Employee newEmp = new Employee(login, password, fio, auth_lvl);
+            if (!empDAO.isUserExists(newEmp.getLogin())) {
+                empDAO.addUser(newEmp);
+                request.getRequestDispatcher("Admin.jsp").forward(request, response);
+            }
         }
     }
 }

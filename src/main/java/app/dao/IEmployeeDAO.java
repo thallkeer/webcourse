@@ -18,9 +18,9 @@ public interface IEmployeeDAO {
     public Employee getUser(int id);
     public Employee getUser(String login);
     public Integer getIdByLogin(String login);
-    public void update(int id, Employee employee);
-    public void delete(Employee employee);
-    public  void delete(int id);
+    public void updateUser(Employee employee);
+    public void deleteUser(Employee employee);
+    public void delete(int id);
     public boolean isUserExists(String login);
     public List<Employee> getAll() throws SQLException;
 }
