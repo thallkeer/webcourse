@@ -10,6 +10,7 @@
     <welcome-file-list>
         <welcome-file>Views/AuthPage.jsp</welcome-file>
     </welcome-file-list>
+
     <servlet>
         <description></description>
         <display-name>LoginServlet</display-name>
@@ -30,4 +31,5 @@
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/LogoutServlet</url-pattern>
     </servlet-mapping>
+
 </web-app>

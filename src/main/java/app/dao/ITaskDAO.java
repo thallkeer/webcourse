@@ -13,4 +13,5 @@ public interface ITaskDAO {
     public Map<Integer,String> getNextLvl(Integer task_id);
     public List<Task> getAll() throws SQLException;
     public Task getTasksTree(Integer id) throws SQLException;
+    public void addProject(Task project);
 }

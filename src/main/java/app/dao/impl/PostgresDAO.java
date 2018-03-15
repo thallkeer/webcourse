@@ -9,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PostgresDAO extends BaseDAO {
-    private  Connection  connection = null;
     public static final String DEFAULT_HOST = "localhost";
     public static final String DEFAULT_DATABASE = "finance_flows";
     public static final String DEFAULT_LOGIN = "postgres";
@@ -27,16 +26,15 @@ public class PostgresDAO extends BaseDAO {
             this.url = "jdbc:postgresql://" + host + ":" + port;
     }
     @Override
-    public Connection getConnection () {
-        return connection;
-    }
-    @Override
-    public void Connect (String login, String password) {
-        super.Connect(login, password);
+    public Connection getConnection (){
+        Connection connection = null;
         try {
             connection = DriverManager.getConnection(url, properties);
+            return connection;
         } catch (SQLException e) {
-            connection = null;
+            e.printStackTrace();
         }
+        return connection;
     }
+
 }

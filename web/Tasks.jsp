@@ -2,19 +2,15 @@
 <%@ page import="app.dao.impl.PostgresDAO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="app.entities.Task" %>
-<%@ page import="java.sql.SQLException" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <%
     String login = (String) session.getAttribute("login");
     PostgresDAO dao = new PostgresDAO();
     dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
-    dao.Connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
+    dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
     TaskDAO taskDAO = new TaskDAO(dao);
     List<Task> tasks = null;//taskDAO.getUserTasks(login);
-    Task testtask = taskDAO.getTasksTree(31);
-    out.print(testtask.getTask_id());
-    out.print(testtask.getPtask_id());
     tasks = taskDAO.getAll();
 %>
 <head>
@@ -46,7 +42,7 @@
 </table>
 
 <div class="description">
-    <a>Добавить проект</a>
+    <a href="AddTask.jsp?login=<%=login%>">Добавить проект</a>
 </div>
 </div>
 </body>

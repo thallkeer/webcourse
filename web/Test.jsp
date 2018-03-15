@@ -1,30 +1,55 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html lang="en">
+<%@ page import="app.dao.impl.PostgresDAO" %>
+<%@ page import="app.dao.impl.TaskDAO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="app.dao.impl.OutgoDAO" %>
+<%@ page import="java.util.Map" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<%
+    PostgresDAO dao = new PostgresDAO();
+    dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
+    dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
+    TaskDAO taskDAO = new TaskDAO(dao);
+    List<String> parents = taskDAO.getParents();
+    OutgoDAO outgoDAO = new OutgoDAO(dao);
+    Map<Integer,Integer> outs = outgoDAO.getPtaskSum(3,1);
+
+%>
 <head>
-    <meta charset="UTF-8">
     <title>Document</title>
-    <link rel="stylesheet" href="../Styles/teststyle.css">
+    <link rel="stylesheet" href="resources/teststyle.css">
 </head>
 <body>
 <ul id="trees">
     <li>
         1
         <ul class="box_hide">
-            <li>1.1</li>
-            <li>1.2</li>
-            <li>1.3</li>
-            <li>
-                1.4
+            <%--<% for (String desc :--%>
+                    <%--parents) {--%>
+            <%--%>--%>
+            <li>Проект
                 <ul class="box_hide">
-                    <li>1.4.1</li>
-                    <li>1.4.2</li>
-                    <li>1.4.3</li>
-                    <li>1.4.4</li>
-                    <li>1.4.5</li>
-                    <li>1.4.6</li>
+                    <% for (Map.Entry entry :
+                            outs.entrySet()) {
+                    %>
+                    <li><%=entry.getValue()%></li>
+                    <%}%>
                 </ul>
             </li>
+            <%--<li>1.2</li>--%>
+            <%--<li>1.3</li>--%>
+            <%--<li>--%>
+                <%--1.4--%>
+                <%--<ul class="box_hide">--%>
+                    <%--<li>1.4.1</li>--%>
+                    <%--<li>1.4.2</li>--%>
+                    <%--<li>1.4.3</li>--%>
+                    <%--<li>1.4.4</li>--%>
+                    <%--<li>1.4.5</li>--%>
+                    <%--<li>1.4.6</li>--%>
+                <%--</ul>--%>
+            <%--</li>--%>
+            <%--<% }%>--%>
         </ul>
     </li>
     <li>2</li>

@@ -25,7 +25,7 @@ Welcome <%=session.getAttribute("login") %>
 <%
     PostgresDAO dao = new PostgresDAO();
     dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
-    dao.Connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
+    dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
     session.setAttribute("dao",dao);
     session.setAttribute("login",request.getAttribute("login"));
     IEmployeeDAO empDAO = new EmployeeDAO(dao);

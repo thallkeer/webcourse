@@ -3,7 +3,7 @@ package app.entities;
 public class Task {
 
     private Integer task_id;
-    private Integer ptask_id;
+   private Integer ptask_id;
 //    private Task parent_task;
     private String description;
     private String organization;
