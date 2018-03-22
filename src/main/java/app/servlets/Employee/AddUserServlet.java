@@ -1,4 +1,4 @@
-package app.servlets;
+package app.servlets.Employee;
 
 import app.dao.impl.EmployeeDAO;
 import app.dao.impl.PostgresDAO;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet("/AddUser")
+@WebServlet("/addUser")
 public class AddUserServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -25,10 +25,9 @@ public class AddUserServlet extends HttpServlet {
         }
 
         if (!login.equals("") && !password.equals("") && auth_lvl!=-1) {
-            HttpSession session = request.getSession();
             PostgresDAO dao = new PostgresDAO();
             dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
-            dao.Connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
+            dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
             EmployeeDAO empDAO = new EmployeeDAO(dao);
 
             Employee newEmp = new Employee(login, password, fio, auth_lvl);

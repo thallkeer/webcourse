@@ -38,18 +38,6 @@ public class TaskDAO implements ITaskDAO {
         return tasks;
     }
 
-    private boolean addDescription(List<String> descs, ResultSet rs) {
-        try {
-            while (rs.next()) {
-                descs.add(rs.getString("description"));
-            }
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public Map<Integer,String> getNextLvl(Integer task_id){
         Map<Integer,String> res = new HashMap<>();
         ResultSet rs = dao.execSQL(String.format("Select task_id,description from task where ptask_id = '%1$s'",task_id));
@@ -106,11 +94,31 @@ public class TaskDAO implements ITaskDAO {
         return taskList;
     }
 
-    public List<String> getParents(){
-        List<String> descrs = new ArrayList<String>();
-        ResultSet rs = dao.execSQL("Select description from task where ptask_id IS NULL");
-        if (addDescription(descrs, rs)) return descrs;
+    public Map<Integer,String> getParents(){
+        Map<Integer,String> descrs = new HashMap<>();
+        ResultSet rs = dao.execSQL("Select task_id,description from task where ptask_id IS NULL");
+        try {
+            while (rs.next()) {
+                descrs.put(rs.getInt("task_id"),rs.getString("description"));
+            }
+            return descrs;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
+    }
+
+    public Task getTaskById(Integer task_id) throws SQLException {
+        Task res = new Task();
+        ResultSet rs = dao.execSQL(String.format("select * from task where task_id='%1$s'",task_id));
+        while (rs.next()){
+            res.setTask_id(rs.getInt(1));
+            res.setPtask_id(rs.getInt(2));
+            res.setDescription(rs.getString(3));
+            res.setOrganization(rs.getString(4));
+            res.setArchival(rs.getBoolean(5));
+        }
+        return res;
     }
 
     @Override

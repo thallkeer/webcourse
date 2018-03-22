@@ -21,7 +21,7 @@ public class LoginServlet extends HttpServlet {
 
         PostgresDAO dao = new PostgresDAO();
         dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
-        dao.Connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
+        dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
         EmployeeDAO userBean = new EmployeeDAO(dao);
 
 

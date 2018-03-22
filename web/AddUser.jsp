@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="resources/fortest.css">
 </head>
 <body>
-    <form action="/AddUser" method="post">
+    <form action="/addUser" method="post">
         <table align="center">
             <tr>
                 <td>Login</td>
@@ -28,7 +28,7 @@
             </tr>
             <tr>
                 <td>Auth_lvl</td>
-                <td><input type="number" name="auth_lvl" /></td>
+                <td><input type="number" min="1" max="4" name="auth_lvl" /></td>
             </tr>
             <tr>
                 <td></td>

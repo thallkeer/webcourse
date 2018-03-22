@@ -1,24 +1,8 @@
-<%@ page import="app.dao.ITaskDAO" %>
-<%@ page import="java.util.List" %>
-<%@ page import="app.dao.impl.TaskDAO" %>
-<%@ page import="app.dao.impl.PostgresDAO" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.sql.SQLException" %>
-<%@ page import="app.entities.Employee" %>
-<%@ page import="app.dao.impl.EmployeeDAO" %>
-<%@ page import="app.dao.IEmployeeDAO" %>
-<%@ page import="app.dao.BaseDAO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <html>
-<%
-    String login = (String) session.getAttribute("login");
-    Integer emp_id=0;
-    if (request.getParameter("emp_id")!=null){
-        emp_id = Integer.valueOf(request.getParameter("emp_id"));
-    }
-%>
+
 
 <head>
     <title>Расходы</title>
@@ -28,22 +12,37 @@
 </head>
 <body>
 <table align="center" border="1">
-    <caption>Расходы сотрудника <%=login%></caption>
+    <caption>Расходы сотрудника <c:out value="${param.fio}" /></caption>
     <thead>
-    <td>Статья расходов</td>
+    <td>Идентификатор</td>
+    <td>Идентификатор траты</td>
+    <td>Описание</td>
     <td>Сумма</td>
+    <td>Редактировать</td>
+    <td>Удалить</td>
     </thead>
+
+    <c:forEach items="${outgos}" var="outgo">
     <tbody>
     <tr>
-        <td>Здесь что-то будет</td>
-        <td>Здесь тоже что-то будет</td>
+        <td><c:out value="${outgo.outgo_id}"/>
+        </td>
+        <td><c:out value="${outgo.task_id.task_id}"/>
+        </td>
+        <td><c:out value="${outgo.task_id.description}"/>
+        </td>
+        <td><c:out value="${outgo.summ}"/>
+        </td>
+        <td>
+        <td><a href="/editOutgo?outgo_id=${outgo.outgo_id}">Редактировать</a></td>
+        <td><a href="/deleteOutgo?outgo_id=${outgo.outgo_id}">Удалить</a></td>
+        </td>
     </tr>
     </tbody>
+    </c:forEach>
+    <tr>
+        <td><a href="/addOutgo?emp_id=${param.emp_id}">Добавить расход</a></td>
+    </tr>
 </table>
-
-<div>
-<a href="AddOutgo.jsp?emp_id=<%=emp_id%>">Добавить расход</a>
-</div>
-
 </body>
 </html>

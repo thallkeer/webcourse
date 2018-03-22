@@ -1,19 +1,6 @@
-<%@ page import="java.util.Map" %>
-<%@ page import="app.dao.impl.TaskDAO" %>
-<%@ page import="java.util.List" %>
-<%@ page import="app.dao.ITaskDAO" %>
-<%@ page import="app.dao.impl.PostgresDAO" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<%
-    String login = (String) request.getAttribute("login");
-    Integer emp_id=0;
-    if (request.getParameter("emp_id")!=null){
-        emp_id = Integer.valueOf(request.getParameter("emp_id"));
-    }
-    ITaskDAO taskDAO = new TaskDAO((PostgresDAO) session.getAttribute("dao"));
-    List<String> descs = taskDAO.getParents();
-%>
 <head>
     <title>Добавление расхода</title>
     <link rel="stylesheet" type="text/css" href="resources/fortest.css"/>
@@ -23,71 +10,60 @@
 <%--<div id="hidden" style="display: none;">--%>
     <%--<div class="overlay"></div>--%>
     <%--<div class="visible">--%>
-        <form id="addform" action="AddOutgo?emp_id=<%=emp_id%>" method="post">
+
+<%--<div class="content">--%>
+<%--<div>--%>
+
+        <form id="addform" action="/changeOptions" method="post">
             <table align="center">
-            <%--<div class="content">--%>
-                <%--<div>--%>
                 <tr>
-                    <td><select id="first" name="firstchoice" onchange="this.form.submit()">
+                    <td><select id="first" name="firstchoice" required onchange="this.form.submit()">
                         <option value="0" selected disabled>Выберите расход</option>
-                        <%
-                            for (int i=0;i<descs.size();i++) {
-                        %>
-                        <option value="<%=i+1%>"
-                                <%
-                                    if (request.getParameter("firstchoice")!=null){
-                                        if (Integer.valueOf(request.getParameter("firstchoice"))==i+1){
-                                            out.print("selected");
-                                        }
-                                    }
-                                %>
-                        ><%=descs.get(i)%></option>
-                        <%}%>
+
+                        <c:forEach  items="${descs}" var="desc">
+                            <option value="${desc.key}"
+                                ${desc.key == indexes[0] ? 'selected' : ''}
+                            >${desc.value}
+                            </option>
+                        </c:forEach>
+                    </select>
+                    </td>
+                </tr>
+                <%--</div>--%>
+                <%--<div>--%>
+                <tr>
+                    <td><select  id="second" name="secondchoice" required onchange="this.form.submit()">
+                        <option selected value="0" disabled>Выбрать</option>
+                        <c:forEach items="${seconds}"  var="sec">
+                            <option value="${sec.key}"
+                                ${sec.key == indexes[1] ? 'selected' : ''}
+                            >${sec.value}</option>
+                        </c:forEach>
                     </select></td>
                 </tr>
                 <%--</div>--%>
                 <%--<div>--%>
                 <tr>
-                    <td><select  id="second" name="secondchoice" onchange="this.form.submit()">
+                    <td><select id="third" name="thirdchoice">
                         <option selected value="0" disabled>Выбрать</option>
-                        <%--<option>Выберите расход первого уровня</option>--%>
-                        <%
-                            if (request.getParameter("firstchoice")!=null){
-                                Map<Integer,String> secondvals = taskDAO.getNextLvl(Integer.valueOf(request.getParameter("firstchoice")));
-                                for (Map.Entry entry : secondvals.entrySet()){
-                        %>
-                        <option value="<%=entry.getKey()%>"
-                                <%
-                                    if (request.getParameter("secondchoice")!=null)
-                                        if (Integer.valueOf(request.getParameter("secondchoice"))==entry.getKey()){
-                                            out.print("selected");
-                                        }
-                                %>
-                        ><%=entry.getValue()%></option>
-                        <%}}%>
-                    </select></td>
-                </tr>
-                <%--</div>--%>
-                <%--<div>--%>
-                <tr>
-                    <td><select id="third"  name="thirdchoice">
-                        <option selected value="0" disabled>Выбрать</option>
-                        <%
-                            if (request.getParameter("firstchoice")!=null && request.getParameter("secondchoice")!=null){
-                                Map<Integer,String> thirdvals = taskDAO.getNextLvl(Integer.valueOf(request.getParameter("secondchoice")));
-                                for (Map.Entry entry : thirdvals.entrySet()){
-                        %>
-                        <option value="<%=entry.getKey()%>"><%=entry.getValue()%></option>
-                        <%}}%>
+                        <c:forEach items="${thirds}" var="third">
+                            <option value="${third.key}"${desc.key == indexes[2] ? 'selected' : ''}>${third.value}</option>
+                        </c:forEach>
                     </select></td>
                 </tr>
                 <%--</div>--%>
             <%--</div>--%>
                 <tr>
-                <td><input type="submit"></td>
+                    <td><input name="sum" type="number" value="0" placeholder="1.0" step="0.01" min="0"></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" value="Добавить" formaction="/addOutgo" formmethod="post"></td>
+                <td><a href="/addOutgo?emp_id=${emp_id}">Добавить</a></td>
                 </tr>
             </table>
         </form>
+
+
     <%--</div>--%>
 <%--</div>--%>
 </body>

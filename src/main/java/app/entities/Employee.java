@@ -12,6 +12,7 @@ public class Employee implements Serializable {
     private String password;
     private String fio;
     private Integer auth_lvl;
+    private double account;
     private List<Outgo> outgoes;
 
     public Employee(Integer employee_id,String login, String password , String fio, Integer auth_lvl) {
@@ -20,6 +21,23 @@ public class Employee implements Serializable {
         this.password = password;
         this.fio = fio;
         this.auth_lvl = auth_lvl;
+    }
+
+    public Employee(Integer employee_id,String login, String password , String fio, Integer auth_lvl, double account) {
+        this.employee_id = employee_id;
+        this.login = login;
+        this.password = password;
+        this.fio = fio;
+        this.auth_lvl = auth_lvl;
+        this.account = account;
+    }
+
+    public Employee(String login, String password , String fio, Integer auth_lvl, double account) {
+        this.login = login;
+        this.password = password;
+        this.fio = fio;
+        this.auth_lvl = auth_lvl;
+        this.account = account;
     }
 
     public Employee(String login, String password , String fio, Integer auth_lvl) {
@@ -86,6 +104,14 @@ public class Employee implements Serializable {
 
     public void setAuth_lvl(Integer auth_lvl) {
         this.auth_lvl = auth_lvl;
+    }
+
+    public Double getAccount() {
+        return account;
+    }
+
+    public void setAccount(Double account) {
+        this.account = account;
     }
 
     public List<Outgo> getOutgoes() {

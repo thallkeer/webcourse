@@ -11,32 +11,47 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-@WebServlet("/ChangeOptions")
+@WebServlet("/changeOptions")
 public class ChangeOptionsServlet extends HttpServlet {
+    Map<Integer,String> descs = null;
+    Map<Integer,String> seconds = null;
+    Map<Integer,String> thirds = null;
+    int[] indexes = new int[3];
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        int selectedfirstIndex = Integer.valueOf(req.getParameter("firstchoice"));
-//       String canGet = req.getParameter("hiden");
-////        int selectedsecondIndex = 1;
-////        if(canGet.equals("true"))
-////            selectedsecondIndex= Integer.parseInt(Objects.requireNonNull(req.getParameter("secondchoice")));
-//
-//        PostgresDAO dao = new PostgresDAO();
-//        dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
-//        dao.Connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
-//        ITaskDAO taskDAO = new TaskDAO(dao);
-//        List<String> descs = taskDAO.getDescriptionByIdLvl(selectedfirstIndex+1,2);
-//        req.setAttribute("descs2", descs);
-////        if (selectedsecondIndex!=-1){
-////            req.setAttribute("descs3", taskDAO.getNextLvl(4));
-////        }
-//        req.getRequestDispatcher("Outgoes.jsp").forward(req, resp);
+        HttpSession session = req.getSession();
+        PostgresDAO dao = (PostgresDAO) session.getAttribute("dao");
+        ITaskDAO taskDAO = new TaskDAO(dao);
+        descs = (Map<Integer, String>) session.getAttribute("descs");
+        boolean isChanged=false;
+        if (req.getParameter("firstchoice") != null) {
 
+            int selectedfirstIndex = Integer.valueOf(req.getParameter("firstchoice"));
+            if (selectedfirstIndex!= indexes[0] && req.getParameter("thirdchoice") != null)
+            {
+                isChanged=true;
+            }
+            indexes[0]=selectedfirstIndex;
+            seconds = taskDAO.getNextLvl(selectedfirstIndex);
+
+        }
+         if(req.getParameter("secondchoice") != null)
+        {
+            if (!isChanged){
+                int selectedsecondIndex = Integer.valueOf(req.getParameter("secondchoice"));
+                indexes[1]=selectedsecondIndex;
+                thirds = taskDAO.getNextLvl(selectedsecondIndex);
+            }
+            else thirds = null;
+        }
+        req.setAttribute("indexes",indexes);
+        req.setAttribute("descs",descs);
+        req.setAttribute("seconds",seconds);
+        req.setAttribute("thirds",thirds);
+        req.getRequestDispatcher("AddOutgo.jsp").forward(req, resp);
     }
 
 }

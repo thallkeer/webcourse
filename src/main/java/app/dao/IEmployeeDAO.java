@@ -18,6 +18,8 @@ public interface IEmployeeDAO {
     public Employee getUser(int id);
     public Employee getUser(String login);
     public Integer getIdByLogin(String login);
+    public String getLoginById(int id);
+    public String getFioById(int id);
     public void updateUser(Employee employee);
     public void deleteUser(Employee employee);
     public void delete(int id);

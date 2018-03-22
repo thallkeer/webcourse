@@ -1,4 +1,4 @@
-package app.servlets;
+package app.servlets.Task;
 
 
 import app.dao.impl.PostgresDAO;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 
-@WebServlet("/AddTask")
+@WebServlet("/addTask")
 public class AddTaskServlet extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
@@ -27,7 +27,7 @@ public class AddTaskServlet extends HttpServlet{
         if (!title.equals("")){
             PostgresDAO dao = new PostgresDAO();
             dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
-            dao.Connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
+            dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
             TaskDAO taskDAO = new TaskDAO(dao);
             Task task = new Task();
             task.setDescription(title);

@@ -10,7 +10,6 @@
     dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
     dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
     TaskDAO taskDAO = new TaskDAO(dao);
-    List<String> parents = taskDAO.getParents();
     OutgoDAO outgoDAO = new OutgoDAO(dao);
     Map<Integer,Integer> outs = outgoDAO.getPtaskSum(3,1);
 

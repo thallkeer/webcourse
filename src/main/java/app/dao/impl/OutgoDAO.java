@@ -2,10 +2,13 @@ package app.dao.impl;
 
 import app.dao.IOutgoDAO;
 import app.entities.Outgo;
+import app.entities.Task;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OutgoDAO implements IOutgoDAO {
@@ -20,11 +23,30 @@ public class OutgoDAO implements IOutgoDAO {
 
     public void addOutgo(Outgo outgo){
         dao.execute(String.format("INSERT INTO outgo(" +
-                        "outgo_id, task_id, emp_id,summ) values('%1$s','%2$s','%3$s','%4$s')",
-                outgo.getOutgo_id(),
-                outgo.getTask_id(),
+                        "task_id, emp_id,summ) values('%1$s','%2$s','%3$s')",
+                outgo.getTask_id().getTask_id(),
                 outgo.getEmp_id(),
                 outgo.getSumm()));
+
+    }
+
+    public List<Outgo> getOutgoesByEmpId(Integer emp_id) throws SQLException {
+        List<Outgo> res = new ArrayList<>();
+        ResultSet rs = dao.execSQL(String.format("SELECT o.outgo_id,t.task_id,t.description,o.summ " +
+                "FROM outgo o,task t " +
+                "WHERE o.task_id=t.task_id and o.emp_id='%1$s' " +
+                "ORDER BY o.outgo_id ASC",emp_id));
+        while (rs.next()){
+            Outgo outgo = new Outgo();
+            outgo.setOutgo_id(rs.getInt("outgo_id"));
+            Task tmpTask = new Task();
+            tmpTask.setTask_id(rs.getInt("task_id"));
+            tmpTask.setDescription(rs.getString("description"));
+            outgo.setTask_id(tmpTask);
+            outgo.setSumm(rs.getDouble("summ"));
+            res.add(outgo);
+        }
+        return res;
     }
 
 

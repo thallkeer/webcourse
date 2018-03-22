@@ -39,11 +39,12 @@ public class EmployeeDAO implements IEmployeeDAO {
     @Override
     public void addUser(Employee employee) {
         dao.execute(String.format("INSERT INTO employee(" +
-                        "login, password, fio,auth_lvl) values('%1$s','%2$s','%3$s','%4$s')",
+                        "login, password, fio,auth_lvl,account) values('%1$s','%2$s','%3$s','%4$s','%5$s')",
                 employee.getLogin(),
                 employee.getPassword(),
                 employee.getFio(),
-                employee.getAuth_lvl()));
+                employee.getAuth_lvl(),
+                employee.getAccount()));
     }
 
     public boolean isUserExists(String login){
@@ -101,6 +102,28 @@ public class EmployeeDAO implements IEmployeeDAO {
         return -1;
     }
 
+    public String getLoginById(int id){
+        ResultSet rs = dao.execSQL(String.format("select login from employee where employee_id='%1$s'",id));
+        try {
+            rs.next();
+            return rs.getString("login");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String getFioById(int id){
+        ResultSet rs = dao.execSQL(String.format("select fio from employee where employee_id='%1$s'",id));
+        try {
+            rs.next();
+            return rs.getString("fio");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     public Employee getUser(String login) {
         Employee employee = new Employee();
         ResultSet rs = dao.execSQL(String.format("select * from employee where login='%1$s'",login));
@@ -120,11 +143,12 @@ public class EmployeeDAO implements IEmployeeDAO {
 
     public void updateUser(Employee employee) {
         dao.execute(String.format("update employee set login = '%1$s', password = '%2$s', fio = '%3$s'," +
-                        " auth_lvl = '%4$s' where employee_id = %5$s",
+                        " auth_lvl = '%4$s', account = '%5$s'  where employee_id = %6$s",
                employee.getLogin(),
                 employee.getPassword(),
                 employee.getFio(),
                 employee.getAuth_lvl(),
+                employee.getAccount(),
                 employee.getEmployee_id())
         );
 
@@ -148,7 +172,7 @@ public class EmployeeDAO implements IEmployeeDAO {
         try {
         while (rs.next()){
             emp = new Employee(rs.getInt("employee_id"),rs.getString("login"),rs.getString("password"),
-                    rs.getString("fio"),rs.getInt("auth_lvl"));
+                    rs.getString("fio"),rs.getInt("auth_lvl"),rs.getDouble("account"));
             employees.add(emp);
         }
         } catch (SQLException e) {
