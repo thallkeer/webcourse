@@ -1,6 +1,5 @@
 body {
-
-    background: url("background.png") repeat;
+    background: url("dust_scratches.png") repeat;
     font-family: Verdana, Arial, sans-serif;
     font-size: smaller;
     padding: 0;
@@ -25,6 +24,7 @@ a.btnAdd{
     color: white;
     text-decoration: none;
     padding: .8em 1em calc(.8em + 3px);
+    width: 50px;
     border-radius: 3px;
     background: rgb(64,199,129);
     box-shadow: 0 -3px rgb(53,167,110) inset;
@@ -34,6 +34,26 @@ a.btnAdd:hover { background: rgb(53, 167, 110); }
 a.btnAdd:active {
     background: rgb(33,147,90);
     box-shadow: 0 3px rgb(33,147,90) inset;
+}
+
+.href {
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    padding: .8em 1em calc(.8em + 3px);
+    border-radius: 3px;
+    background: dodgerblue;
+    box-shadow: 0 -3px #436aff inset;
+    transition: 0.2s;
+}
+
+.href:hover {
+    background: #436aff;
+}
+
+.href:active{
+    background: #232aff;
+    box-shadow: 0 3px #232aff inset;
 }
 
 

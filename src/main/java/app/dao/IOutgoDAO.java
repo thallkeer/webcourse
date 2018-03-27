@@ -9,7 +9,7 @@ import java.util.Map;
 public interface IOutgoDAO {
     public void addOutgo(Outgo outgo);
     public List<Outgo> getOutgoesByEmpId(Integer emp_id);
-    public void getSum();
+    public List<Integer> getParentsIds(int task_id);
     public Map<String,Double> getPtaskSum(Integer emp_id,Integer ptask_id);
     public Outgo getOutgoById(int outgo_id);
     public void deleteOutgo(int outgo_id);

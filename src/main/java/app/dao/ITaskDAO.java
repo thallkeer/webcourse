@@ -14,17 +14,18 @@ public interface ITaskDAO {
     public Map<Integer,String> getDescriptionsByTaskId(int task_id);
     public Map<Integer,String> getParents();
     public Map<Integer,String> getNextLvl(int task_id);
-    public Task getTaskById(int task_id) throws SQLException;
+    public Task getTaskById(int task_id);
 
     /**
      указывает на то,возвращать ли архивные проекты* @param withArchival
      * @return
      * @throws SQLException
      */
-    public List<Task> getAll(boolean withArchival) throws SQLException;
-    public Task getTasksTree(int id) throws SQLException;
+    public List<Task> getAll(boolean withArchival) ;
+    public Task getTaskParent(int id) ;
     public void addProject(Task project);
     public String getDescriptionbyTaskId(int task_id);
     public int getParentTaskId(int task_id);
+    public List<Task> getTasksTreeByTaskId(int task_id);
 
 }

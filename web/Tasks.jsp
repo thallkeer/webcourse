@@ -9,7 +9,7 @@
 <body>
 <div>
 <table align="center" border="1">
-    <caption>Проекты сотрудника</caption>
+    <caption>Справочник проектов и задач</caption>
     <thead>
     <th>Номер задачи</th>
     <th>Номер верхней категории</th>
@@ -33,6 +33,10 @@
 <div>
     <a href="AddTask.jsp"  class="btnAdd">Добавить проект</a>
     <a href="/addTask" class="btnAdd">Добавить статью расходов</a>
+    <a href="/employees" class="href">Сотрудники</a>
+    <div><br></div>
 </div>
+
+
 </body>
 </html>

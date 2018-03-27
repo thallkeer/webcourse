@@ -9,8 +9,9 @@
     <link rel="stylesheet" type="text/css" href="resources/fortest.css"/>
 </head>
 <body>
+
 <table align="center" border="1">
-    <caption>Расходы сотрудника <c:out value="${param.fio}" /></caption>
+    <caption>Расходы сотрудника <c:out value="${fio}"/></caption>
     <thead>
     <th>Идентификатор</th>
     <th>Идентификатор траты</th>
@@ -46,9 +47,10 @@
         <%--</td>--%>
     <%--</tr>--%>
 </table>
-<div><a href="/addOutgo?emp_id=${param.emp_id}"
-        class="btnAdd">Добавить
-</a></div>
+<div>
+    <a href="/addOutgo?emp_id=${emp_id}"class="btnAdd">Добавить</a>
+    <a href="/employees" class="href">Сотрудники</a>
+</div>
 
 </body>
 </html>

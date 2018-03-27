@@ -16,7 +16,7 @@
     <th>ФИО</th>
     <th>Уровень доступа</th>
     <th>Баланс</th>
-    <th>Проекты</th>
+    <%--<th>Проекты</th>--%>
     <th>Список расходов</th>
     <th>Редактировать</th>
     <th>Удалить</th>
@@ -37,7 +37,6 @@
         </td>
         <td><c:out value="${emp.account}"/>
         </td>
-        <td><a href="/tasks?emp_id=${emp.employee_id}">Проекты</a></td>
         <td><a href="/outgoes?emp_id=${emp.employee_id}">Расходы</a></td>
         <td><a href="/editUser?emp_id=${emp.employee_id}">Редактировать</a></td>
         <td><a href="/deleteUser?emp_id=${emp.employee_id}" class="pri">Удалить</a></td>
@@ -47,6 +46,7 @@
 </table>
     <div>
         <a href="AddUser.jsp" class="btnAdd">Добавить</a>
+        <a href="/tasks" class="href">Справочники</a>
     </div>
 <%--<div style="text-align: right"><a href="<%=request.getContextPath()%>/LogoutServlet">Logout</a></div>--%>
 </body>

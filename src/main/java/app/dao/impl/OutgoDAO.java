@@ -72,6 +72,7 @@ public class OutgoDAO implements IOutgoDAO {
         while (rs.next()){
             Outgo outgo = new Outgo();
             outgo.setOutgo_id(rs.getInt("outgo_id"));
+            outgo.setEmp_id(emp_id);
             outgo.setTask_id(rs.getInt("task_id"));
             outgo.setSumm(rs.getDouble("summ"));
             outgo.setTask_description(rs.getString("description"));
@@ -83,20 +84,45 @@ public class OutgoDAO implements IOutgoDAO {
         return res;
     }
 
-
-    public void getSum()  {
+    //Идет с категории нижнего уровня до родителя, то есть у которого ptask_id==null
+    public List<Integer> getParentsIds(int task_id)  {
+        List<Integer> res = new ArrayList<>();
         ResultSet rs = dao.execSQL(String.format("WITH RECURSIVE r AS (" +
-                " SELECT task_id, ptask_id, description, 1 AS level" +
+                " SELECT task_id, ptask_id, description" +
                 " FROM task" +
-                " WHERE task_id = 5"+
+                " WHERE task_id = '%1$s'"+
                 " UNION ALL" +
-                " SELECT task.task_id, task.ptask_id, task.description, r.level + 1 AS level" +
+                " SELECT task.task_id, task.ptask_id, task.description" +
                 " FROM task" +
                 " JOIN r" +
                 " ON task.task_id = r.ptask_id)" +
-                " SELECT * FROM r"));
+                " SELECT * FROM r",task_id));
+        try{
+            while (rs.next()){
+                res.add(task_id);
+
+        }}catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        return res;
     }
 
+
+    //Сумма затрат на задачу по айдишнику (причем, если таких задач несколько, то считает всю сумму на них)
+    public double getSumByTaskId(int task_id,int emp_id){
+        ResultSet rs = dao.execSQL(String.format("Select summ from outgo where task_id = '%1$s' and emp_id = '%2$s'",
+                task_id,
+                emp_id));
+        double res=0;
+        try {
+            while (rs.next()) {
+               res+= rs.getDouble("sum");
+            }
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        return res;
+    }
 
     //Возвращает сумму, потраченную работником на затрату уровнем выше
     public Map<String,Double> getPtaskSum(Integer emp_id,Integer ptask_id)  {

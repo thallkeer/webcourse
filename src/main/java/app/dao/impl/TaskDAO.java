@@ -192,11 +192,38 @@ public class TaskDAO implements ITaskDAO {
                 }
 
             }
-            return res;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-      return null;
+      return res;
+    }
+
+    public List<Task> getTasksTreeByTaskId(int task_id) {
+       List<Task> res = new ArrayList<>();
+        ResultSet rs = dao.execSQL(String.format("WITH RECURSIVE r AS (" +
+                " SELECT task_id, ptask_id, description" +
+                " FROM task" +
+                " WHERE task_id = '%1$s'"+
+                " UNION ALL" +
+                " SELECT task.task_id, task.ptask_id, task.description" +
+                " FROM task" +
+                " JOIN r" +
+                " ON task.ptask_id = r.task_id)" +
+                " SELECT * FROM r ORDER BY task_id,ptask_id ASC",task_id));
+
+        try {
+            while (rs.next())
+            {
+                Task tmp = new Task();
+                tmp.setTask_id(rs.getInt("task_id"));
+                tmp.setPtask_id(rs.getInt("ptask_id"));
+                tmp.setDescription(rs.getString("description"));
+                res.add(tmp);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     @Override
@@ -213,22 +240,20 @@ public class TaskDAO implements ITaskDAO {
     }
 
     //Находит родителя самого нижнего уровня
-    public Task getTasksTree(int id) {
+    public Task getTaskParent(int id) {
         ResultSet rs = dao.execSQL(String.format("select task_id,ptask_id,description from task where task_id='%1$s'", id));
         Task task = null;
         try {
             while (rs.next()) {
                 if (rs.getInt("ptask_id") == 0)
                     return new Task(rs.getInt("task_id"), rs.getInt("ptask_id"), rs.getString("description"));
-                task = getTasksTree(rs.getInt("ptask_id"));
+                task = getTaskParent(rs.getInt("ptask_id"));
             }
         }catch (SQLException ex){
             ex.printStackTrace();
         }
        return task;
     }
-
-
 
     public int getParentTaskId(int task_id){
         ResultSet rs = dao.execSQL(String.format("Select ptask_id from task where task_id = '%1$s'",task_id));

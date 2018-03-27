@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.rmi.MarshalledObject;
 import java.util.Map;
 
 @WebServlet("/editOutgo")
@@ -29,7 +28,7 @@ public class EditOutgoServlet extends HttpServlet{
         TaskDAO taskDAO = new TaskDAO(PostgresDAO.getInstance());
         int parent_id = taskDAO.getParentTaskId(outgoToEdit.getTask_id());
         //получаем родителя самого верхнего уровня по task_id редактируемого расхода
-        Task tmp = taskDAO.getTasksTree(outgoToEdit.getTask_id());
+        Task tmp = taskDAO.getTaskParent(outgoToEdit.getTask_id());
         Map<Integer,String> descs = taskDAO.getParents();
         //получаем для первого уровня категории уровнем ниже
         Map<Integer,String> seconds = taskDAO.getNextLvl(tmp.getTask_id());

@@ -1,61 +1,32 @@
-<%@ page import="app.dao.impl.PostgresDAO" %>
-<%@ page import="app.dao.impl.TaskDAO" %>
-<%@ page import="java.util.List" %>
-<%@ page import="app.dao.impl.OutgoDAO" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.sql.SQLException" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<%
-    PostgresDAO dao = PostgresDAO.getInstance();
-    dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
-    dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
-    OutgoDAO outgoDAO = new OutgoDAO(dao);
-    Map<String,Double> outs = null;
-    try {
-        outs = outgoDAO.getPtaskSum(3,1);
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
 
-%>
 <head>
     <title>Document</title>
     <link rel="stylesheet" href="resources/teststyle.css">
 </head>
 <body>
+
 <ul id="trees">
-    <%--<li>--%>
-        <%--1--%>
-        <%--<ul class="box_hide">--%>
-            <%--<% for (String desc :--%>
-                    <%--parents) {--%>
-            <%--%>--%>
-            <li>Проект
-                <ul class="box_hide">
-                    <% for (Map.Entry entry :
-                            outs.entrySet()) {
-                    %>
-                    <li><%=entry.getKey()%> <%=entry.getValue()%></li>
-                    <%}%>
-                </ul>
-            </li>
-            <%--<li>1.2</li>--%>
-            <%--<li>1.3</li>--%>
-            <%--<li>--%>
-                <%--1.4--%>
-                <%--<ul class="box_hide">--%>
-                    <%--<li>1.4.1</li>--%>
-                    <%--<li>1.4.2</li>--%>
-                    <%--<li>1.4.3</li>--%>
-                    <%--<li>1.4.4</li>--%>
-                    <%--<li>1.4.5</li>--%>
-                    <%--<li>1.4.6</li>--%>
-                <%--</ul>--%>
-            <%--</li>--%>
-            <%--<% }%>--%>
-        <%--</ul>--%>
-    <%--</li>--%>
+    <li>
+        Проект
+        <ul class="box_hide">
+            <li>Аренда техники</li>
+            <li>Транспортные услуги</li>
+        <li>
+        ГСМ
+            <ul class="box_hide">
+                <li>1.4.1</li>
+                <li>1.4.2</li>
+                <li>1.4.3</li>
+                <li>1.4.4</li>
+                <li>1.4.5</li>
+                <li>1.4.6</li>
+            </ul>
+        </li>
+        </ul>
+    </li>
     <li>2</li>
     <li>3</li>
     <li>4</li>
