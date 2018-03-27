@@ -14,8 +14,9 @@ public class PostgresDAO extends BaseDAO {
     public static final String DEFAULT_LOGIN = "postgres";
     public static final String DEFAULT_PASSWORD = "1234";
     public static final int DEFAULT_PORT = 5432;
+    private static PostgresDAO instance;
 
-    public PostgresDAO() {
+    private PostgresDAO() {
         super ("org.postgresql.Driver");
     }
     @Override
@@ -27,14 +28,20 @@ public class PostgresDAO extends BaseDAO {
     }
     @Override
     public Connection getConnection (){
-        Connection connection = null;
+        Connection connection =null;
         try {
             connection = DriverManager.getConnection(url, properties);
-            return connection;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return connection;
+    }
+
+    public static PostgresDAO getInstance(){
+        if (instance==null){
+            instance = new PostgresDAO();
+        }
+        return instance;
     }
 
 }

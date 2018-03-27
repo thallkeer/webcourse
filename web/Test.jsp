@@ -3,15 +3,20 @@
 <%@ page import="java.util.List" %>
 <%@ page import="app.dao.impl.OutgoDAO" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="java.sql.SQLException" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <%
-    PostgresDAO dao = new PostgresDAO();
+    PostgresDAO dao = PostgresDAO.getInstance();
     dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
     dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
-    TaskDAO taskDAO = new TaskDAO(dao);
     OutgoDAO outgoDAO = new OutgoDAO(dao);
-    Map<Integer,Integer> outs = outgoDAO.getPtaskSum(3,1);
+    Map<String,Double> outs = null;
+    try {
+        outs = outgoDAO.getPtaskSum(3,1);
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
 
 %>
 <head>
@@ -20,9 +25,9 @@
 </head>
 <body>
 <ul id="trees">
-    <li>
-        1
-        <ul class="box_hide">
+    <%--<li>--%>
+        <%--1--%>
+        <%--<ul class="box_hide">--%>
             <%--<% for (String desc :--%>
                     <%--parents) {--%>
             <%--%>--%>
@@ -31,7 +36,7 @@
                     <% for (Map.Entry entry :
                             outs.entrySet()) {
                     %>
-                    <li><%=entry.getValue()%></li>
+                    <li><%=entry.getKey()%> <%=entry.getValue()%></li>
                     <%}%>
                 </ul>
             </li>
@@ -49,8 +54,8 @@
                 <%--</ul>--%>
             <%--</li>--%>
             <%--<% }%>--%>
-        </ul>
-    </li>
+        <%--</ul>--%>
+    <%--</li>--%>
     <li>2</li>
     <li>3</li>
     <li>4</li>

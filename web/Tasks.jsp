@@ -1,18 +1,7 @@
-<%@ page import="app.dao.impl.TaskDAO" %>
-<%@ page import="app.dao.impl.PostgresDAO" %>
-<%@ page import="java.util.List" %>
-<%@ page import="app.entities.Task" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
-<%
-    String login = (String) session.getAttribute("login");
-    PostgresDAO dao = new PostgresDAO();
-    dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
-    dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
-    TaskDAO taskDAO = new TaskDAO(dao);
-    List<Task> tasks = null;//taskDAO.getUserTasks(login);
-    tasks = taskDAO.getAll();
-%>
+
 <head>
     <title>Задачи</title>
     <link rel="stylesheet" type="text/css" href="resources/fortest.css"/>
@@ -20,30 +9,30 @@
 <body>
 <div>
 <table align="center" border="1">
-    <caption>Проекты сотрудника<%=login%></caption>
+    <caption>Проекты сотрудника</caption>
     <thead>
-    <td>Номер проекта</td>
-    <td>Номер верхней категории</td>
-    <td>Проект</td>
-    <td>Редактировать</td>
-    <td>Удалить</td>
+    <th>Номер задачи</th>
+    <th>Номер верхней категории</th>
+    <th>Описание</th>
+    <th>Редактировать</th>
+    <th>Удалить</th>
     </thead>
-    <% for (Task task :
-            tasks) {
-    %>
+    <c:forEach items="${tasks}" var="task">
     <tbody>
     <tr>
-        <td><%=task.getTask_id()%></td>
-        <td><%=task.getPtask_id()%></td>
-        <td><%=task.getDescription()%></td>
+        <td><c:out value="${task.task_id}"/></td>
+        <td><c:out value="${task.ptask_id}"/></td>
+        <td><c:out value="${task.description}"/></td>
+        <td><a href="/editTask?task_id=${task.task_id}">Редактировать</a></td>
+        <td><a href="/deleteTask?task_id=${task.task_id}">Удалить</a></td>
     </tr>
     </tbody>
-    <% }%>
+    </c:forEach>
 </table>
-
-<div class="description">
-    <a href="AddTask.jsp?login=<%=login%>">Добавить проект</a>
 </div>
+<div>
+    <a href="AddTask.jsp"  class="btnAdd">Добавить проект</a>
+    <a href="/addTask" class="btnAdd">Добавить статью расходов</a>
 </div>
 </body>
 </html>

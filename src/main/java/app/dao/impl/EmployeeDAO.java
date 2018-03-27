@@ -13,7 +13,7 @@ import java.util.List;
 public class EmployeeDAO implements IEmployeeDAO {
     private PostgresDAO dao;
 
-    public EmployeeDAO(){}
+    public  EmployeeDAO(){}
 
     public EmployeeDAO(PostgresDAO dao){
         this.dao = dao;
@@ -48,8 +48,8 @@ public class EmployeeDAO implements IEmployeeDAO {
     }
 
     public boolean isUserExists(String login){
-        ResultSet rs = dao.execSQL(String.format("Select * from employee where login='%1$s'",login));
-        return rs==null;
+        ResultSet rs = dao.execSQL(String.format("SELECT EXISTS(SELECT id FROM table WHERE login='%1$s')",login));
+        return rs!=null;
     }
 
 
@@ -163,6 +163,7 @@ public class EmployeeDAO implements IEmployeeDAO {
     public void delete(int id) {
         dao.execute(String.format("delete from employee where employee_id = '%1$s'",id));
     }
+
 
     @Override
     public List<Employee> getAll() {

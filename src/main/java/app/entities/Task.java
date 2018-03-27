@@ -2,8 +2,8 @@ package app.entities;
 
 public class Task {
 
-    private Integer task_id;
-   private Integer ptask_id;
+    private int task_id;
+   private int ptask_id;
 //    private Task parent_task;
     private String description;
     private String organization;
@@ -14,13 +14,13 @@ public class Task {
 
     }
 
-    public Task(Integer task_id,Integer ptask_id,String description){
+    public Task(int task_id,int ptask_id,String description){
         this.task_id=task_id;
         this.ptask_id=ptask_id;
         this.description = description;
     }
 
-    public Task(Integer task_id,Integer ptask_id,String description,String organization,boolean isArchival){
+    public Task(int task_id,int ptask_id,String description,String organization,boolean isArchival){
         this.task_id=task_id;
         this.ptask_id=ptask_id;
         this.description = description;
@@ -32,7 +32,7 @@ public class Task {
         return task_id;
     }
 
-    public void setTask_id(Integer task_id) {
+    public void setTask_id(int task_id) {
         this.task_id = task_id;
     }
 
@@ -78,11 +78,11 @@ public class Task {
         isArchival = archival;
     }
 
-    public Integer getPtask_id() {
+    public int getPtask_id() {
         return ptask_id;
     }
 
-    public void setPtask_id(Integer ptask_id) {
+    public void setPtask_id(int ptask_id) {
         this.ptask_id = ptask_id;
     }
 }

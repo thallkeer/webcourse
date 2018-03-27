@@ -7,20 +7,19 @@
     <link rel="stylesheet" href="resources/fortest.css">
 </head>
 <body>
-Welcome <c:out value="${param.login}" />
-<div>
 <table align="center" border="1">
     <caption>Cписок сотрудников</caption>
     <thead>
-    <td>Табельный номер</td>
-    <td>Логин</td>
-    <td>Пароль</td>
-    <td>ФИО</td>
-    <td>Уровень доступа</td>
-    <td>Баланс</td>
-    <td>Список расходов</td>
-    <td>Редактировать</td>
-    <td>Удалить</td>
+    <th>Табельный номер</th>
+    <th>Логин</th>
+    <th>Пароль</th>
+    <th>ФИО</th>
+    <th>Уровень доступа</th>
+    <th>Баланс</th>
+    <th>Проекты</th>
+    <th>Список расходов</th>
+    <th>Редактировать</th>
+    <th>Удалить</th>
     </thead>
 
     <c:forEach items="${emps}" var="emp">
@@ -38,21 +37,18 @@ Welcome <c:out value="${param.login}" />
         </td>
         <td><c:out value="${emp.account}"/>
         </td>
-
+        <td><a href="/tasks?emp_id=${emp.employee_id}">Проекты</a></td>
         <td><a href="/outgoes?emp_id=${emp.employee_id}">Расходы</a></td>
         <td><a href="/editUser?emp_id=${emp.employee_id}">Редактировать</a></td>
-        <td><a href="/deleteUser?emp_id=${emp.employee_id}">Удалить</a></td>
-
+        <td><a href="/deleteUser?emp_id=${emp.employee_id}" class="pri">Удалить</a></td>
     </tr>
     </tbody>
     </c:forEach>
 </table>
-    <div class="description">
-        <a href="AddUser.jsp">Добавить пользователя</a>
+    <div>
+        <a href="AddUser.jsp" class="btnAdd">Добавить</a>
     </div>
-
-</div>
-<div style="text-align: right"><a href="<%=request.getContextPath()%>/LogoutServlet">Logout</a></div>
+<%--<div style="text-align: right"><a href="<%=request.getContextPath()%>/LogoutServlet">Logout</a></div>--%>
 </body>
 </html>
 

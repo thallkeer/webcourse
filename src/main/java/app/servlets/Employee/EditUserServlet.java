@@ -16,8 +16,7 @@ import java.io.IOException;
 @WebServlet("/editUser")
 public class EditUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        IEmployeeDAO empDAO = new EmployeeDAO((PostgresDAO) session.getAttribute("dao"));
+        IEmployeeDAO empDAO = new EmployeeDAO(PostgresDAO.getInstance());
         Integer emp_id=0;
         Employee emp=null;
         if (request.getParameter("emp_id")!=null){
@@ -45,7 +44,7 @@ public class EditUserServlet extends HttpServlet {
             auth_lvl = Integer.valueOf(req.getParameter("auth_lvl"));
             account = Double.parseDouble(req.getParameter("account"));
             Employee editedEmployee = new Employee(emp_id,login,password,fio,auth_lvl,account);
-            IEmployeeDAO empDAO = new EmployeeDAO((PostgresDAO) session.getAttribute("dao"));
+            IEmployeeDAO empDAO = new EmployeeDAO(PostgresDAO.getInstance());
             empDAO.updateUser(editedEmployee);
             resp.sendRedirect("/employees");
         }

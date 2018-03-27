@@ -1,3 +1,4 @@
+<%@ taglib prefix="sql" uri="http://java.sun.com/jstl/sql" %>
 <%--
   Created by IntelliJ IDEA.
   User: kir73
@@ -12,11 +13,13 @@
     <link rel="stylesheet" href="resources/fortest.css">
 </head>
 <body>
-<form action="AddTask" method="post">
+
+<form action="/addProject" method="post">
     <table align="center">
+        <caption>Добавление проекта</caption>
         <tr>
             <td>Название проекта</td>
-            <td><input type="text" name="title" /></td>
+            <td><input type="text" required name="title" /></td>
         </tr>
         <tr>
             <td>Организация</td>
@@ -26,7 +29,8 @@
             </select></td>
         </tr>
         <tr>
-            <td><input type="checkbox" name="archival">Архивный</td>
+            <td>Архивный</td>
+            <td><input type="checkbox" name="archival"></td>
         </tr>
         <tr>
             <td></td>

@@ -1,5 +1,6 @@
 package app.servlets.Employee;
 
+import app.dao.BaseDAO;
 import app.dao.IEmployeeDAO;
 import app.dao.impl.EmployeeDAO;
 import app.dao.impl.PostgresDAO;
@@ -13,28 +14,35 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/employees")
 public class EmployeesServlet extends HttpServlet{
+
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PostgresDAO dao = new PostgresDAO();
+    public void init() throws ServletException {
+        PostgresDAO dao = PostgresDAO.getInstance();
         dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
         dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
-        HttpSession session =  req.getSession();
-        session.setAttribute("dao",dao);
-        session.setAttribute("login",req.getAttribute("login"));
-        IEmployeeDAO empDAO = new EmployeeDAO(dao);
-        List<Employee> emps = null;
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        List<Employee> emps;
+        IEmployeeDAO empDAO;
+        PostgresDAO dao = PostgresDAO.getInstance();
+        empDAO = new EmployeeDAO(dao);
         try {
             emps = empDAO.getAll();
-            req.setAttribute("emps",emps);
+            req.setAttribute("emps", emps);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+        session.setAttribute("login", req.getAttribute("login"));
         req.getRequestDispatcher("Admin.jsp").forward(req, resp);
     }
 }

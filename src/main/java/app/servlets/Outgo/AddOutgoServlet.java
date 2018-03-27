@@ -26,15 +26,14 @@ import java.util.Map;
 @WebServlet("/addOutgo")
 public class AddOutgoServlet extends HttpServlet {
     Integer emp_id=0;
-    PostgresDAO dao;
-    ITaskDAO taskDAO;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             if (req.getParameter("emp_id")!=null){
             emp_id = Integer.valueOf(req.getParameter("emp_id"));
             HttpSession session = req.getSession();
-            dao = (PostgresDAO) session.getAttribute("dao");
-            taskDAO = new TaskDAO(dao);
+            PostgresDAO dao = PostgresDAO.getInstance();
+            TaskDAO taskDAO = new TaskDAO(dao);
             Map<Integer,String> descs = taskDAO.getParents();
             session.setAttribute("descs",descs);
             req.setAttribute("emp_id",emp_id);
@@ -44,29 +43,27 @@ public class AddOutgoServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-
-        int first_id,second_id,third_id;
+        int second_id,third_id;
         double summ;
+        PostgresDAO dao = PostgresDAO.getInstance();
+        TaskDAO taskDAO = new TaskDAO(dao);
+        OutgoDAO outgoDAO = new OutgoDAO(dao);
         if (request.getParameter("firstchoice") != null && request.getParameter("secondchoice")!=null){
-            first_id = Integer.parseInt(request.getParameter("firstchoice"));
+//            first_id = Integer.parseInt(request.getParameter("firstchoice"));
             second_id = Integer.parseInt(request.getParameter("secondchoice"));
             summ = Double.parseDouble(request.getParameter("sum"));
-            Task firstparent = new Task();
-            firstparent.setTask_id(first_id);
-            Task secondparent = null;
-            try {
-                secondparent = taskDAO.getTaskById(second_id);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
             Outgo outgo = new Outgo();
             outgo.setEmp_id(emp_id);
-            outgo.setTask_id(secondparent);
+            if (request.getParameter("thirdchoice")!=null){
+                third_id = Integer.parseInt(request.getParameter("thirdchoice"));
+                outgo.setTask_id(third_id);
+            }
+            else {
+                outgo.setTask_id(second_id);
+            }
             outgo.setSumm(summ);
-            IOutgoDAO outgoDAO = new OutgoDAO(dao);
-            outgoDAO.addOutgo(outgo);
 
+            outgoDAO.addOutgo(outgo);
         }
         response.sendRedirect("/outgoes?emp_id="+emp_id);
 

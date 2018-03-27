@@ -18,26 +18,23 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.*;
 
 @WebServlet("/outgoes")
 public class OutgoesServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        IOutgoDAO dao = new OutgoDAO((PostgresDAO) session.getAttribute("dao"));
+        PostgresDAO dao = PostgresDAO.getInstance();
+        OutgoDAO outgoDAO = new OutgoDAO(dao);
         Integer emp_id = Integer.valueOf(req.getParameter("emp_id"));
-        IEmployeeDAO empDAO = new EmployeeDAO((PostgresDAO) session.getAttribute("dao"));
+        EmployeeDAO empDAO = new EmployeeDAO(dao);
         String fio = empDAO.getFioById(emp_id);
-        try {
-            List<Outgo> outgos = dao.getOutgoesByEmpId(emp_id);
-            req.setAttribute("outgos",outgos);
-            req.setAttribute("fio",fio);
-            req.setAttribute("emp_id",emp_id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        req.getRequestDispatcher("Outgoes.jsp").forward(req,resp);
+        List<Outgo> outgos = outgoDAO.getOutgoesByEmpId(emp_id);
+        req.setAttribute("outgos", outgos);
+        req.setAttribute("fio", fio);
+        req.setAttribute("emp_id", emp_id);
+
+        req.getRequestDispatcher("Outgoes.jsp").forward(req, resp);
 
     }
 }

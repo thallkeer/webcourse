@@ -2,15 +2,15 @@ package app.entities;
 
 import java.io.Serializable;
 
-public class Auto implements Serializable {
+public class Auto {
 
-    private Integer auto_id;
+    private int auto_id;
 
     private String brand;
 
-    private Integer consumption; //норма расхода литров на 100км
+    private double consumption; //норма расхода литров на 100км
 
-    public Auto(Integer auto_id, String brand, Integer consumption) {
+    public Auto(int auto_id, String brand, double consumption) {
         this.auto_id = auto_id;
         this.brand = brand;
         this.consumption = consumption;
@@ -20,7 +20,7 @@ public class Auto implements Serializable {
         return auto_id;
     }
 
-    public void setAuto_id(final Integer auto_id) {
+    public void setAuto_id(final int auto_id) {
         this.auto_id = auto_id;
     }
 
@@ -32,11 +32,11 @@ public class Auto implements Serializable {
         this.brand = brand;
     }
 
-    public Integer getConsumption() {
+    public double getConsumption() {
         return consumption;
     }
 
-    public void setConsumption(Integer consumption) {
+    public void setConsumption(double consumption) {
         this.consumption = consumption;
     }
 
@@ -46,7 +46,7 @@ public class Auto implements Serializable {
      * @param distance расстояние, которое проехал автомобиль
      * @return
      */
-    public int getsum(int benzprice,int distance){
+    public double getsum(double benzprice,double distance){
         return benzprice*this.consumption*distance/100;
     }
 

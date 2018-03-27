@@ -14,10 +14,8 @@ import java.io.IOException;
 @WebServlet("/deleteUser")
 public class DeleteUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        HttpSession session = request.getSession();
         Integer emp_id = Integer.valueOf(request.getParameter("emp_id"));
-        PostgresDAO dao = (PostgresDAO) session.getAttribute("dao");
+        PostgresDAO dao = PostgresDAO.getInstance();
         EmployeeDAO empDAO = new EmployeeDAO(dao);
         empDAO.delete(emp_id);
         response.sendRedirect("/employees");
