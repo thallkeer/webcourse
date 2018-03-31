@@ -10,6 +10,11 @@ body {
     margin: 0 auto 20px;
 }
 
+.inputAuth_lvl{
+    margin-left: 7px;
+    height: 20px;
+}
+
 .parent {
     width: 100%;
     height: 100%;

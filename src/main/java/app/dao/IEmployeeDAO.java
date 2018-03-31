@@ -11,6 +11,7 @@ public interface IEmployeeDAO {
     String PASSWORD = "password";
     String AUTH_LVL = "auth_lvl";
     String FIO = "fio";
+    String ACC = "account";
 
     public int authenticateUser(String login, String password);
     public void addUser(Employee employee);
@@ -21,8 +22,7 @@ public interface IEmployeeDAO {
     public String getLoginById(int id);
     public String getFioById(int id);
     public void updateUser(Employee employee);
-    public void deleteUser(Employee employee);
-    public void delete(int id);
+    public void deleteUser(int id);
     public boolean isUserExists(String login);
     public List<Employee> getAll() throws SQLException;
 }

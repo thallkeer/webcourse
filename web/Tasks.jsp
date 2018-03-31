@@ -65,9 +65,6 @@
     </div>
 </div>
 
-
-
-
 <div id="categoryModal" class="modalDialog">
     <div>
         <a href="#close" title="Закрыть" class="close">X</a>

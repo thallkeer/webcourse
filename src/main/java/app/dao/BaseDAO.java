@@ -57,13 +57,4 @@ public abstract class BaseDAO {
         }
         return result;
     }
-
-    public void execute(final String sql){
-        try {
-            Statement statement = getConnection().createStatement();
-            statement.execute(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }
