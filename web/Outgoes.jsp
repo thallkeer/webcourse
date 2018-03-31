@@ -37,15 +37,6 @@
     </tr>
     </tbody>
     </c:forEach>
-    <%--<tr>--%>
-        <%--<td>--%>
-            <%--<a href="/addOutgo?emp_id=${param.emp_id}" class="btn btn-add"--%>
-            <%--id="btnAdd" style="margin-bottom: 10px; white-space: nowrap;">--%>
-                <%--<img src="resources/plus-flat.png">--%>
-                <%--Добавить--%>
-            <%--</a>--%>
-        <%--</td>--%>
-    <%--</tr>--%>
 </table>
 <div>
     <a href="/addOutgo?emp_id=${emp_id}"class="btnAdd">Добавить</a>

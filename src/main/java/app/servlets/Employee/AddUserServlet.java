@@ -22,8 +22,7 @@ public class AddUserServlet extends HttpServlet {
         String password= request.getParameter("password");
         String fio= request.getParameter("fio");
         Integer auth_lvl=-1;
-        HttpSession session = request.getSession();
-        PostgresDAO dao = PostgresDAO.getInstance();
+        BaseDAO dao = PostgresDAO.getInstance();
 
         if (!request.getParameter("auth_lvl").equals("")) {
             auth_lvl = Integer.valueOf(request.getParameter("auth_lvl"));

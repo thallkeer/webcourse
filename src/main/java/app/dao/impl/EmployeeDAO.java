@@ -1,5 +1,6 @@
 package app.dao.impl;
 
+import app.dao.BaseDAO;
 import app.dao.IEmployeeDAO;
 import app.entities.Employee;
 
@@ -11,11 +12,11 @@ import java.util.List;
 
 @Stateful
 public class EmployeeDAO implements IEmployeeDAO {
-    private PostgresDAO dao;
+    private BaseDAO dao;
 
     public  EmployeeDAO(){}
 
-    public EmployeeDAO(PostgresDAO dao){
+    public EmployeeDAO(BaseDAO dao){
         this.dao = dao;
     }
 

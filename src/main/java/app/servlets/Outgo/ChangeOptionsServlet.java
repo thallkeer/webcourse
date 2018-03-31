@@ -1,5 +1,6 @@
 package app.servlets.Outgo;
 
+import app.dao.BaseDAO;
 import app.dao.ITaskDAO;
 import app.dao.impl.PostgresDAO;
 import app.dao.impl.TaskDAO;
@@ -16,26 +17,29 @@ import java.util.*;
 
 @WebServlet("/changeOptions")
 public class ChangeOptionsServlet extends HttpServlet {
-    Map<Integer, String> descs;
-    Map<Integer, String> seconds;
-    Map<Integer, String> thirds;
-    int[] indexes;
+    private Map<Integer, String> descs;
+    private Map<Integer, String> seconds;
+    private Map<Integer, String> thirds;
+    private int[] indexes;
+    private ITaskDAO taskDAO;
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         descs = null;
         seconds = null;
         thirds = null;
         indexes = new int[3];
+        taskDAO = new TaskDAO(PostgresDAO.getInstance());
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        PostgresDAO dao = PostgresDAO.getInstance();
-        ITaskDAO taskDAO = new TaskDAO(dao);
         descs = (Map<Integer, String>) session.getAttribute("descs");
-        double sum = Double.parseDouble(req.getParameter("sum"));
+        double sum=0;
+        if (req.getParameter("sum")!=null) {
+            sum = Double.parseDouble(req.getParameter("sum"));
+        }
         boolean isChanged = false;
         if (req.getParameter("firstchoice") != null) {
 

@@ -7,35 +7,27 @@
     <link rel="stylesheet" href="resources/fortest.css">
 </head>
 <body>
-
-<form action="${pageContext.request.contextPath}/editUser?emp_id=${emp.employee_id}" method="post">
-    <table align="center">
-        <tr>
-            <td>Логин</td>
-            <td><input type="text" name="login" value="${emp.login}"/></td>
-        </tr>
-        <tr>
-            <td>Пароль</td>
-            <td><input type="text" name="password" value="${emp.password}"/></td>
-        </tr>
-        <tr>
-            <td>ФИО</td>
-            <td><input type="text" name="fio" value="${emp.fio}"/></td>
-        </tr>
-        <tr>
-            <td>Уровень доступа</td>
-            <td><input type="number" min="1" max="4" name="auth_lvl" value="${emp.auth_lvl}"/></td>
-        </tr>
-        <tr>
-            <td>Баланс</td>
-            <td><input type="number"  name="account" value="${emp.account}"/></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type="submit"></td>
-        </tr>
-    </table>
-</form>
-
+<div class="parent">
+    <form action="/editUser?emp_id=${emp.employee_id}" method="post">
+        <div>
+            <input class="inputAdd" required  type="text"  value="${emp.login}" name="login"/>
+        </div>
+        <div>
+            <input class="inputAdd" required type="text" value="${emp.password}" name="password"/>
+        </div>
+        <div >
+            <input class="inputAdd"  type="text" value="${emp.fio}" name="fio"/>
+        </div>
+        <div>
+            <p>Уровень доступа: <input class="inputLvl" type="number" id="auth_lvl"value="${emp.auth_lvl}" min="1" max="4" name="auth_lvl" /></p>
+        </div>
+        <div>
+            <input class="inputAdd" type="number"  name="account" value="${emp.account}"/>
+        </div>
+        <div>
+            <input class="submitAdd" type="submit" value="Добавить">
+        </div>
+    </form>
+</div>
 </body>
 </html>

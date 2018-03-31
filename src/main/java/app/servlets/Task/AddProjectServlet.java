@@ -1,5 +1,6 @@
 package app.servlets.Task;
 
+import app.dao.BaseDAO;
 import app.dao.impl.PostgresDAO;
 import app.dao.impl.TaskDAO;
 import app.entities.Task;
@@ -21,7 +22,7 @@ public class AddProjectServlet extends HttpServlet {
         String title = req.getParameter("title");
         String org = req.getParameter("org");
         boolean archival = req.getParameterValues("archival") != null;
-        PostgresDAO dao = PostgresDAO.getInstance();
+        BaseDAO dao = PostgresDAO.getInstance();
         if (!title.equals("")){
             TaskDAO taskDAO = new TaskDAO(dao);
             Task task = new Task();

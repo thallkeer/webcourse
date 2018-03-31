@@ -1,5 +1,6 @@
 package app.servlets.Outgo;
 
+import app.dao.BaseDAO;
 import app.dao.IEmployeeDAO;
 import app.dao.IOutgoDAO;
 import app.dao.ITaskDAO;
@@ -26,16 +27,23 @@ import java.util.Map;
 @WebServlet("/addOutgo")
 public class AddOutgoServlet extends HttpServlet {
     Integer emp_id=0;
+    BaseDAO dao;
+
+    @Override
+    public void init() throws ServletException {
+        dao = PostgresDAO.getInstance();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             if (req.getParameter("emp_id")!=null){
             emp_id = Integer.valueOf(req.getParameter("emp_id"));
             HttpSession session = req.getSession();
-            PostgresDAO dao = PostgresDAO.getInstance();
             TaskDAO taskDAO = new TaskDAO(dao);
             Map<Integer,String> descs = taskDAO.getParents();
             session.setAttribute("descs",descs);
+            double sum=0;
+            req.setAttribute("sum",sum);
             req.setAttribute("emp_id",emp_id);
             req.getRequestDispatcher("AddOutgo.jsp").forward(req,resp);
         }
@@ -45,8 +53,6 @@ public class AddOutgoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int second_id,third_id;
         double summ;
-        PostgresDAO dao = PostgresDAO.getInstance();
-        TaskDAO taskDAO = new TaskDAO(dao);
         OutgoDAO outgoDAO = new OutgoDAO(dao);
         if (request.getParameter("firstchoice") != null && request.getParameter("secondchoice")!=null){
 //            first_id = Integer.parseInt(request.getParameter("firstchoice"));
@@ -64,6 +70,11 @@ public class AddOutgoServlet extends HttpServlet {
             outgo.setSumm(summ);
 
             outgoDAO.addOutgo(outgo);
+            EmployeeDAO employeeDAO = new EmployeeDAO(dao);
+            Employee emp = employeeDAO.getUser(emp_id);
+            emp.reduceBalance(summ);
+            employeeDAO.updateUser(emp);
+
         }
         response.sendRedirect("/outgoes?emp_id="+emp_id);
 

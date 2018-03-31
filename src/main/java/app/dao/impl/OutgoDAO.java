@@ -1,9 +1,12 @@
 package app.dao.impl;
 
+import app.dao.BaseDAO;
 import app.dao.IOutgoDAO;
 import app.entities.Outgo;
 import app.entities.Task;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,42 +15,64 @@ import java.util.List;
 import java.util.Map;
 
 public class OutgoDAO implements IOutgoDAO {
-    PostgresDAO dao;
+    BaseDAO dao;
     public OutgoDAO(){
 
     }
 
-    public OutgoDAO(PostgresDAO dao) {
+    public OutgoDAO(BaseDAO dao) {
         this.dao = dao;
     }
 
-    public void addOutgo(Outgo outgo){
-        dao.execute(String.format("INSERT INTO outgo(" +
-                        "task_id, emp_id,summ) values('%1$s','%2$s','%3$s')",
-                outgo.getTask_id(),
-                outgo.getEmp_id(),
-                outgo.getSumm()));
+    public void addOutgo(Outgo outgo) {
+        String query = "INSERT INTO outgo(" +
+                "task_id, emp_id,summ) VALUES(?,?,?)";
+        try (Connection connection = dao.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, outgo.getTask_id());
+            ps.setInt(2, outgo.getEmp_id());
+            ps.setDouble(3, outgo.getSumm());
+            ps.execute();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void updateOutgo(Outgo outgo) {
-        dao.execute(String.format("update outgo set task_id = '%1$s', emp_id = '%2$s', summ = '%3$s'" +
-                        "  where outgo_id = %4$s",
-                outgo.getTask_id(),
-                outgo.getEmp_id(),
-                outgo.getSumm(),
-                outgo.getOutgo_id()));
+        String query = "update outgo set task_id = ?, emp_id = ?, summ = ?" +
+                        "  where outgo_id = ?";
+        try (Connection connection = dao.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, outgo.getTask_id());
+            ps.setInt(2, outgo.getEmp_id());
+            ps.setDouble(3, outgo.getSumm());
+            ps.setInt(4, outgo.getOutgo_id());
+            ps.execute();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void deleteOutgo(int outgo_id){
-        dao.execute(String.format("Delete from outgo where outgo_id = '%1$s'",outgo_id));
+       String query = "Delete from outgo where outgo_id = ?";
+        try (Connection connection = dao.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, outgo_id);
+            ps.execute();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
 
     @Override
     public Outgo getOutgoById(int outgo_id)  {
         Outgo res= new Outgo();
-        ResultSet rs = dao.execSQL(String.format("Select * from outgo where outgo_id = '%1$s'",outgo_id));
-        try {
+        String query = "Select * from outgo where outgo_id = ?";
+        try (Connection connection = dao.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1,outgo_id);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 res.setOutgo_id(rs.getInt("outgo_id"));
                 res.setTask_id(rs.getInt("task_id"));
@@ -64,11 +89,14 @@ public class OutgoDAO implements IOutgoDAO {
 
     public List<Outgo> getOutgoesByEmpId(Integer emp_id)   {
         List<Outgo> res = new ArrayList<>();
-        ResultSet rs = dao.execSQL(String.format("SELECT o.outgo_id,t.task_id,t.description,o.summ " +
+        String query = "SELECT o.outgo_id,t.task_id,t.description,o.summ " +
                 "FROM outgo o,task t " +
-                "WHERE o.task_id=t.task_id and o.emp_id='%1$s' " +
-                "ORDER BY o.outgo_id ASC",emp_id));
-        try{
+                "WHERE o.task_id=t.task_id and o.emp_id=? " +
+                "ORDER BY o.outgo_id ASC";
+        try (Connection connection = dao.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1,emp_id);
+            ResultSet rs = ps.executeQuery();
         while (rs.next()){
             Outgo outgo = new Outgo();
             outgo.setOutgo_id(rs.getInt("outgo_id"));
@@ -110,13 +138,15 @@ public class OutgoDAO implements IOutgoDAO {
 
     //Сумма затрат на задачу по айдишнику (причем, если таких задач несколько, то считает всю сумму на них)
     public double getSumByTaskId(int task_id,int emp_id){
-        ResultSet rs = dao.execSQL(String.format("Select summ from outgo where task_id = '%1$s' and emp_id = '%2$s'",
-                task_id,
-                emp_id));
+        String query = "Select sum(summ) from outgo where task_id = ? and emp_id = ?";
         double res=0;
-        try {
+        try (Connection connection = dao.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1,task_id);
+            ps.setInt(2,emp_id);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-               res+= rs.getDouble("sum");
+               res= rs.getDouble("sum");
             }
         }catch (SQLException ex){
             ex.printStackTrace();

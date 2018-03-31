@@ -1,10 +1,15 @@
 package app.entities;
 
+
+
 public class Task {
 
+
     private int task_id;
+
    private int ptask_id;
 //    private Task parent_task;
+
     private String description;
     private String organization;
     private boolean isArchival;
@@ -61,6 +66,8 @@ public class Task {
                 ", organization='" + organization + '\'' +
                 '}';
     }
+
+
 
 //    public Task getParent_task() {
 //        return parent_task;

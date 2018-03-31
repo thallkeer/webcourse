@@ -1,5 +1,6 @@
 package app.servlets.Outgo;
 
+import app.dao.BaseDAO;
 import app.dao.impl.OutgoDAO;
 import app.dao.impl.PostgresDAO;
 import app.dao.impl.TaskDAO;
@@ -17,15 +18,23 @@ import java.util.Map;
 
 @WebServlet("/editOutgo")
 public class EditOutgoServlet extends HttpServlet{
-    int outgo_id;
-    Outgo outgoToEdit;
+    private Outgo outgoToEdit;
+    private BaseDAO dao;
+    private TaskDAO taskDAO;
+    private OutgoDAO outgoDAO;
+
+    @Override
+    public void init() throws ServletException {
+        dao = PostgresDAO.getInstance();
+        outgoDAO = new OutgoDAO(dao);
+        taskDAO = new TaskDAO(dao);
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        outgo_id = Integer.valueOf(req.getParameter("outgo_id"));
-        OutgoDAO outgoDAO = new OutgoDAO(PostgresDAO.getInstance());
+        int outgo_id = Integer.valueOf(req.getParameter("outgo_id"));
         outgoToEdit = outgoDAO.getOutgoById(outgo_id);
-        TaskDAO taskDAO = new TaskDAO(PostgresDAO.getInstance());
         int parent_id = taskDAO.getParentTaskId(outgoToEdit.getTask_id());
         //получаем родителя самого верхнего уровня по task_id редактируемого расхода
         Task tmp = taskDAO.getTaskParent(outgoToEdit.getTask_id());
@@ -45,28 +54,22 @@ public class EditOutgoServlet extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int second_id,third_id;
+        int second_id, third_id;
         double summ;
-        PostgresDAO dao = PostgresDAO.getInstance();
-        TaskDAO taskDAO = new TaskDAO(dao);
-        OutgoDAO outgoDAO = new OutgoDAO(dao);
-
-
-        if (req.getParameter("firstchoice") != null && req.getParameter("secondchoice")!=null){
+        if (req.getParameter("firstchoice") != null && req.getParameter("secondchoice") != null) {
 //            first_id = Integer.parseInt(request.getParameter("firstchoice"));
             second_id = Integer.parseInt(req.getParameter("secondchoice"));
             summ = Double.parseDouble(req.getParameter("sum"));
-            if (req.getParameter("thirdchoice")!=null){
+            if (req.getParameter("thirdchoice") != null) {
                 third_id = Integer.parseInt(req.getParameter("thirdchoice"));
                 outgoToEdit.setTask_id(third_id);
-            }
-            else {
+            } else {
                 outgoToEdit.setTask_id(second_id);
             }
             outgoToEdit.setSumm(summ);
 
             outgoDAO.updateOutgo(outgoToEdit);
         }
-        resp.sendRedirect("/outgoes?emp_id="+outgoToEdit.getEmp_id());
+        resp.sendRedirect("/outgoes?emp_id=" + outgoToEdit.getEmp_id());
     }
 }

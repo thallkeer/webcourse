@@ -27,6 +27,8 @@ public abstract class BaseDAO {
 
     public abstract Connection getConnection();
 
+
+
     public void connect(String login, String password) {
         registerDriverManager();
         properties = new Properties();
@@ -45,6 +47,7 @@ public abstract class BaseDAO {
             if (getConnection() != null) {
                 Statement statement = getConnection().createStatement();
                 result = statement.executeQuery(sql);
+
             }
         } catch (SQLException e) {
             System.err.println ("SQLException : code = " + String.valueOf(e.getErrorCode()) +

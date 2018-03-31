@@ -1,6 +1,7 @@
 package app.servlets.Outgo;
 
 
+import app.dao.BaseDAO;
 import app.dao.IEmployeeDAO;
 import app.dao.IOutgoDAO;
 import app.dao.ITaskDAO;
@@ -24,7 +25,7 @@ import java.util.*;
 public class OutgoesServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PostgresDAO dao = PostgresDAO.getInstance();
+        BaseDAO dao = PostgresDAO.getInstance();
         OutgoDAO outgoDAO = new OutgoDAO(dao);
         Integer emp_id = Integer.valueOf(req.getParameter("emp_id"));
         EmployeeDAO empDAO = new EmployeeDAO(dao);
@@ -33,7 +34,8 @@ public class OutgoesServlet extends HttpServlet{
         req.setAttribute("outgos", outgos);
         req.setAttribute("fio", fio);
         req.setAttribute("emp_id", emp_id);
-
+        double sum =0;
+        req.setAttribute("sum",sum);
         req.getRequestDispatcher("Outgoes.jsp").forward(req, resp);
 
     }

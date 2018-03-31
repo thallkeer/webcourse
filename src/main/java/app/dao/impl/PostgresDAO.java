@@ -14,7 +14,7 @@ public class PostgresDAO extends BaseDAO {
     public static final String DEFAULT_LOGIN = "postgres";
     public static final String DEFAULT_PASSWORD = "1234";
     public static final int DEFAULT_PORT = 5432;
-    private static PostgresDAO instance;
+    private static BaseDAO instance;
 
     private PostgresDAO() {
         super ("org.postgresql.Driver");
@@ -26,6 +26,12 @@ public class PostgresDAO extends BaseDAO {
         else
             this.url = "jdbc:postgresql://" + host + ":" + port;
     }
+
+    @Override
+    public void connect(String login, String password) {
+        super.connect(login, password);
+    }
+
     @Override
     public Connection getConnection (){
         Connection connection =null;
@@ -37,7 +43,7 @@ public class PostgresDAO extends BaseDAO {
         return connection;
     }
 
-    public static PostgresDAO getInstance(){
+    public static BaseDAO getInstance(){
         if (instance==null){
             instance = new PostgresDAO();
         }

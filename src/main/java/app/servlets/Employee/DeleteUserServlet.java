@@ -1,5 +1,6 @@
 package app.servlets.Employee;
 
+import app.dao.BaseDAO;
 import app.dao.impl.EmployeeDAO;
 import app.dao.impl.PostgresDAO;
 
@@ -15,7 +16,7 @@ import java.io.IOException;
 public class DeleteUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Integer emp_id = Integer.valueOf(request.getParameter("emp_id"));
-        PostgresDAO dao = PostgresDAO.getInstance();
+        BaseDAO dao = PostgresDAO.getInstance();
         EmployeeDAO empDAO = new EmployeeDAO(dao);
         empDAO.delete(emp_id);
         response.sendRedirect("/employees");

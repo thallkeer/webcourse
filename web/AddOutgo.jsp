@@ -1,3 +1,5 @@
+<%@ page import="app.dao.impl.PostgresDAO" %>
+<%@ page import="app.dao.impl.TaskDAO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -5,24 +7,27 @@
     <title>Добавление расхода</title>
     <link rel="stylesheet" type="text/css" href="resources/fortest.css"/>
     <link rel="stylesheet" type="text/css" href="resources/modalDialog.css"/>
+    <%--<script src="resources/sendparams.js"></script>--%>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 
-<table align="center" border="1">
-    <caption>Добавление расхода</caption>
-        <form id="addform" name="addform" action="/changeOptions" method="post">
-            <tr><td>
-            <select id="first" name="firstchoice" required onchange="this.form.submit()">
-                        <option value="0" selected disabled>Выберите расход</option>
-                        <c:forEach  items="${descs}" var="desc">
-                            <option value="${desc.key}"
-                                ${desc.key == indexes[0] ? 'selected' : ''}
-                            >${desc.value}
-                            </option>
-                        </c:forEach>
-                    </select>
-            </td></tr>
-            <tr><td>
+
+<div class="divAddOutgo">
+    <h2>Добавление расхода</h2>
+            <form id="addCategoryform" name="addform" action="/changeOptions" method="post">
+            <div>
+                <select id="first" name="firstchoice" required onchange="this.form.submit()" >
+                    <option value="0" selected disabled>Выберите расход</option>
+                    <c:forEach  items="${descs}" var="desc">
+                        <option value="${desc.key}"
+                            ${desc.key == indexes[0] ? 'selected' : ''}
+                        >${desc.value}
+                        </option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div>
                         <select  id="second" name="secondchoice" required onchange="this.form.submit()">
                         <option selected value="0" disabled>Выбрать</option>
                         <c:forEach items="${seconds}"  var="sec">
@@ -32,21 +37,22 @@
                         </c:forEach>
                     </select>
                     <a href="#openModal">Добавить категорию</a>
-            </td></tr>
-            <tr><td>
-                <select id="third" name="thirdchoice">
+            </div>
+
+
+            <div><select id="third" name="thirdchoice">
                         <option selected value="0" disabled>Выбрать</option>
                         <c:forEach items="${thirds}" var="third">
                             <option value="${third.key}"
                                 ${third.key == indexes[2] ? 'selected' : ''}>${third.value}
                             </option>
                         </c:forEach>
-                    </select>
-            </td></tr>
-            <tr><td><input name="sum" type="number" value="${sum}" size="5" placeholder="1.0" step="0.01" min="0"></td></tr>
-            <tr><td><input type="submit" value="Добавить" formaction="/addOutgo}" formmethod="post"></td></tr>
-        </form>
-</table>
+            </select></div>
+
+            <div><input class="inputAcc" name="sum" type="number" value="${sum}" step="0.01" min="0"></div>
+            <div> <input type="submit" value="Добавить" formaction="/addOutgo" formmethod="post"></div>
+           </form>
+</div>
 
 <div id="openModal" class="modalDialog">
     <div>
@@ -75,5 +81,32 @@
         </form>
     </div>
 </div>
+
+<%--<div id="test" onclick="$('#test').hide()">Test</div>--%>
+
+<script>
+    // $(document).ready(function () {
+    //     $("#addCategoryform").submit(function () {
+    //         $.ajax({
+    //             type: "POST",
+    //             url: "/changeOptions",
+    //             data: $(this).serialize()
+    //         }).done(function () {
+    //             alert("ABC");
+    //         });
+    //         return false;
+    //     });
+    // });
+    function send() {
+        $.ajax({
+            type: "GET",
+            url: "/changeOptions",
+            data: { firstchoice : $('#first').val()}
+        });
+    }
+
+</script>
+
+
 </body>
 </html>

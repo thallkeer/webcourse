@@ -1,5 +1,6 @@
 package app.servlets.Outgo;
 
+import app.dao.BaseDAO;
 import app.dao.impl.EmployeeDAO;
 import app.dao.impl.OutgoDAO;
 import app.dao.impl.PostgresDAO;
@@ -16,7 +17,7 @@ public class DeleteOutgoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int outgo_id = Integer.valueOf(req.getParameter("outgo_id"));
-        PostgresDAO dao = PostgresDAO.getInstance();
+        BaseDAO dao = PostgresDAO.getInstance();
         OutgoDAO outgoDAO = new OutgoDAO(dao);
         outgoDAO.deleteOutgo(outgo_id);
         resp.sendRedirect("/outgoes");

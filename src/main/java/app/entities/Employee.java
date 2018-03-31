@@ -66,6 +66,10 @@ public class Employee implements Serializable {
         return login.equals(this.getLogin()) && password.equals(this.getPassword());
     }
 
+    public void reduceBalance(double sum){
+        this.account-=sum;
+    }
+
     public Integer getEmployee_id() {
         return employee_id;
     }

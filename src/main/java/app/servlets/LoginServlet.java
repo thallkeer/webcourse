@@ -1,5 +1,6 @@
 package app.servlets;
 
+import app.dao.BaseDAO;
 import app.dao.impl.PostgresDAO;
 import app.dao.impl.EmployeeDAO;
 
@@ -19,7 +20,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
 
-        PostgresDAO dao = PostgresDAO.getInstance();
+        BaseDAO dao = PostgresDAO.getInstance();
 //        dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
 //        dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
         EmployeeDAO userBean = new EmployeeDAO(dao);
@@ -35,7 +36,7 @@ public class LoginServlet extends HttpServlet {
                     HttpSession session = request.getSession(); //Creating a session
                     session.setAttribute("Admin", login); //setting session attribute
                     request.setAttribute("login", login);
-                    request.getRequestDispatcher("Admin.jsp").forward(request, response);
+                    request.getRequestDispatcher("Users.jsp").forward(request, response);
                     break;
                 }
                 case 2: {
