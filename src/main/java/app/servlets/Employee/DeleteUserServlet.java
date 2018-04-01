@@ -18,7 +18,7 @@ public class DeleteUserServlet extends HttpServlet {
         Integer emp_id = Integer.valueOf(request.getParameter("emp_id"));
         BaseDAO dao = PostgresDAO.getInstance();
         EmployeeDAO empDAO = new EmployeeDAO(dao);
-        empDAO.delete(emp_id);
+        empDAO.deleteUser(emp_id);
         response.sendRedirect("/employees");
     }
 }

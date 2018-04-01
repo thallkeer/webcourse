@@ -13,7 +13,7 @@ public class Employee implements Serializable {
     private String fio;
     private Integer auth_lvl;
     private double account;
-    private List<Outgo> outgoes;
+
 
     public Employee(Integer employee_id,String login, String password , String fio, Integer auth_lvl) {
         this.employee_id = employee_id;
@@ -118,11 +118,5 @@ public class Employee implements Serializable {
         this.account = account;
     }
 
-    public List<Outgo> getOutgoes() {
-        return outgoes;
-    }
 
-    public void setOutgoes(List<Outgo> outgoes) {
-        this.outgoes = outgoes;
-    }
 }

@@ -131,23 +131,26 @@ public class EmployeeDAO implements IEmployeeDAO {
 
     public String getLoginById(int id){
         String query = "select login from employee where employee_id=?";
-        return getString(id, query);
-    }
-
-    public String getFioById(int id){
-        String query = "select fio from employee where employee_id=?";
-        String res="";
-        res = getString(id, query);
-        return res;
-    }
-
-    private String getString(int id, String query) {
         try (Connection connection = dao.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next())
                 return rs.getString("login");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String getFioById(int id){
+        String query = "select fio from employee where employee_id=?";
+        try (Connection connection = dao.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next())
+                return rs.getString("fio");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -207,7 +210,7 @@ public class EmployeeDAO implements IEmployeeDAO {
     @Override
     public List<Employee> getAll() {
         List<Employee> employees = new ArrayList<>();
-        String query = "SELECT * FROM employee";
+        String query = "SELECT * FROM employee ORDER BY employee_id ASC";
         Employee emp;
         try (Connection connection = dao.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(query);

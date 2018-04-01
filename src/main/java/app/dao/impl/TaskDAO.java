@@ -22,6 +22,8 @@ public class TaskDAO implements ITaskDAO {
 
 
     public void addCategory(Task task) {
+        //Проверка на существование у родителя такого потомка
+        if (getIdByDescription(task.getPtask_id(),task.getDescription())==-1) return;
         String query = "Insert into task(ptask_id,description) values (?,?)";
         try (Connection connection = dao.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(query);
@@ -34,7 +36,7 @@ public class TaskDAO implements ITaskDAO {
     }
 
     @Override
-    public void addCategory(Task parent, String child) {
+    public void addCategoryAndChild(Task parent, String child) {
         String selectMax = "SELECT max(task_id) FROM task";
         String insertQuery = "Insert into task(task_id,ptask_id,description) values (?,?,?)";
         int parent_id = -1;
@@ -183,6 +185,23 @@ public class TaskDAO implements ITaskDAO {
         }
     }
 
+    public int getIdByDescription(int ptask_id,String descr){
+        int res=-1;
+        String query = "select task_id from task where ptask_id=? and description=?";
+        try(Connection connection = dao.getConnection()){
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1,ptask_id);
+            ps.setString(2,descr);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                res = rs.getInt("task_id");
+            }}
+        catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        return res;
+    }
+
     public Task getTaskById(int task_id) {
         Task res = new Task();
         String query = "select * from task where task_id=?";
@@ -238,25 +257,16 @@ public class TaskDAO implements ITaskDAO {
         }
     }
 
-    @Override //Изменить на prepared statements
+    @Override
     public List<Task> getAll(boolean withArchival) {
         List<Task> taskList = new ArrayList<>();
-        ResultSet rs;
         Task task;
-        if (withArchival){
-            rs = dao.execSQL("select * from task ORDER BY task_id ASC");
-        }
-        else {
-            rs = dao.execSQL("select * from task where isarchival=false ORDER BY task_id ASC");
-        }
-        try {
+        String query = withArchival ? "select * from task ORDER BY task_id ASC" : "select * from task where isarchival=false ORDER BY task_id ASC";
+        try (Connection connection = dao.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                if (rs.getInt("ptask_id") == 0) {
-                    task = new Task(rs.getInt("task_id"), 0, rs.getString("description"));
-                } else {
-
-                    task = new Task(rs.getInt("task_id"), rs.getInt("ptask_id"), rs.getString("description"));
-                }
+                task = new Task(rs.getInt("task_id"), rs.getInt("ptask_id"), rs.getString("description"));
                 taskList.add(task);
             }
         } catch (SQLException e) {
@@ -311,26 +321,33 @@ public class TaskDAO implements ITaskDAO {
     }
 
     @Override
-    public String getDescriptionbyTaskId(int task_id) {
-        ResultSet rs = dao.execSQL(String.format("Select description from task where task_id='%1$s'",task_id));
-        try{
-            while (rs.next()){
+    public String getDescriptionByTaskId(int task_id) {
+       String query = "Select description from task where task_id=?";
+        try (Connection connection = dao.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1,task_id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
                 return rs.getString("description");
             }
         }catch (SQLException ex){
             ex.printStackTrace();
         }
-        return null;
+        return "";
     }
 
     //Находит родителя самого нижнего уровня
-    public Task getTaskParent(int id) {
-        ResultSet rs = dao.execSQL(String.format("select task_id,ptask_id,description from task where task_id='%1$s'", id));
+    public Task getTaskParent(int task_id) {
+        String query = "select task_id,ptask_id,description from task where task_id=?";
         Task task = null;
-        try {
-            while (rs.next()) {
-                if (rs.getInt("ptask_id") == 0)
+        try (Connection connection = dao.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1,task_id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                if (rs.getInt("ptask_id") == 0){
                     return new Task(rs.getInt("task_id"), rs.getInt("ptask_id"), rs.getString("description"));
+                }
                 task = getTaskParent(rs.getInt("ptask_id"));
             }
         }catch (SQLException ex){

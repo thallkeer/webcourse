@@ -9,7 +9,7 @@ import java.util.Map;
 public interface ITaskDAO {
 
     public void addCategory(Task task);
-    public void addCategory(Task parent,String child);
+    public void addCategoryAndChild(Task parent,String child);
     public void delete(int task_id);
     public void update(int task_id,String description);
     public List<Task> getUserTasks(int emp_id);
@@ -17,7 +17,7 @@ public interface ITaskDAO {
     public Map<Integer,String> getParents();
     public Map<Integer,String> getNextLvl(int task_id);
     public Task getTaskById(int task_id);
-
+    public int getIdByDescription(int ptask_id,String description);
 
     public List<Task> getNormalTree(List<Task> res,int task_id);
     public List<Task> getParentsList(int someint);
@@ -30,7 +30,7 @@ public interface ITaskDAO {
     public List<Task> getAll(boolean withArchival) ;
     public Task getTaskParent(int id) ;
     public void addProject(Task project);
-    public String getDescriptionbyTaskId(int task_id);
+    public String getDescriptionByTaskId(int task_id);
     public int getParentTaskId(int task_id);
 
 

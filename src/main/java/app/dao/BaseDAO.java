@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.util.Properties;
 
 public abstract class BaseDAO {
-    protected String driver = null;
+    private String driver;
     protected String url = null;
     protected Properties properties = null;
 
@@ -15,7 +15,7 @@ public abstract class BaseDAO {
         this.driver = driver;
     }
 
-    protected void registerDriverManager() {
+    private void registerDriverManager() {
         try {
             Class.forName(driver).newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -27,8 +27,6 @@ public abstract class BaseDAO {
 
     public abstract Connection getConnection();
 
-
-
     public void connect(String login, String password) {
         registerDriverManager();
         properties = new Properties();
@@ -36,25 +34,5 @@ public abstract class BaseDAO {
         properties.setProperty("user", login);
         properties.setProperty("useUnicode", "true");
         properties.setProperty("characterEncoding", "utf8");
-    }
-
-    /**
-     * Функция выполнения SQL-запроса
-     */
-    public ResultSet execSQL (final String sql) {
-        ResultSet result = null;
-        try {
-            if (getConnection() != null) {
-                Statement statement = getConnection().createStatement();
-                result = statement.executeQuery(sql);
-
-            }
-        } catch (SQLException e) {
-            System.err.println ("SQLException : code = " + String.valueOf(e.getErrorCode()) +
-                    " - " + e.getMessage());
-            System.err.println ("\tSQL : " + sql);
-
-        }
-        return result;
     }
 }

@@ -31,7 +31,7 @@ public class AddTaskServlet extends HttpServlet{
         upcategory.setPtask_id(parent_id);
         upcategory.setDescription(upcategorydesc);
         if (!downcategorydesc.equals("")){
-            taskDAO.addCategory(upcategory,downcategorydesc);
+            taskDAO.addCategoryAndChild(upcategory,downcategorydesc);
         }
         else {
             taskDAO.addCategory(upcategory);
