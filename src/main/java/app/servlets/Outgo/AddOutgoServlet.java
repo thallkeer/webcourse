@@ -62,8 +62,9 @@ public class AddOutgoServlet extends HttpServlet {
             taskDAO.addCategory(task);
             if (request.getParameter("thirdchoice") != null) {
                 third_id = Integer.parseInt(request.getParameter("thirdchoice"));
+                int ptask_id = taskDAO.getIdByDescription(first_id, task.getDescription());
                 task = new Task();
-                task.setPtask_id(taskDAO.getIdByDescription(first_id, task.getDescription()));
+                task.setPtask_id(ptask_id);
                 task.setDescription(taskDAO.getDescriptionByTaskId(third_id));
                 taskDAO.addCategory(task);
                 outgo.setTask_id(taskDAO.getIdByDescription(task.getPtask_id(), task.getDescription()));

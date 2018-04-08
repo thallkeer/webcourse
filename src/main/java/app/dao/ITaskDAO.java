@@ -1,7 +1,9 @@
 package app.dao;
 
 import app.entities.Task;
+import app.entities.Test;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -18,15 +20,8 @@ public interface ITaskDAO {
     public Map<Integer,String> getNextLvl(int task_id);
     public Task getTaskById(int task_id);
     public int getIdByDescription(int ptask_id,String description);
-
-    public List<Task> getNormalTree(List<Task> res,int task_id);
-    public List<Task> getParentsList(int someint);
-
-        /**
-     указывает на то,возвращать ли архивные проекты* @param withArchival
-     * @return
-     * @throws SQLException
-     */
+    public List<Task> getParentsList();
+    public List<Task> getTasksTree();
     public List<Task> getAll(boolean withArchival) ;
     public Task getTaskParent(int id) ;
     public void addProject(Task project);

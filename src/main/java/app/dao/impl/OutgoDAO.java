@@ -113,27 +113,30 @@ public class OutgoDAO implements IOutgoDAO {
     }
 
     //Идет с категории нижнего уровня до родителя, то есть у которого ptask_id==null
-//    public List<Integer> getParentsIds(int task_id)  {
-//        List<Integer> res = new ArrayList<>();
-//        ResultSet rs = dao.execSQL(String.format("WITH RECURSIVE r AS (" +
-//                " SELECT task_id, ptask_id, description" +
-//                " FROM task" +
-//                " WHERE task_id = '%1$s'"+
-//                " UNION ALL" +
-//                " SELECT task.task_id, task.ptask_id, task.description" +
-//                " FROM task" +
-//                " JOIN r" +
-//                " ON task.task_id = r.ptask_id)" +
-//                " SELECT * FROM r",task_id));
-//        try{
-//            while (rs.next()){
-//                res.add(task_id);
-//
-//        }}catch (SQLException ex){
-//            ex.printStackTrace();
-//        }
-//        return res;
-//    }
+    public List<Integer> getParentsIds(int task_id) {
+        List<Integer> res = new ArrayList<>();
+        String query = "WITH RECURSIVE r AS (" +
+                " SELECT task_id, ptask_id, description" +
+                " FROM task" +
+                " WHERE task_id = ?" +
+                " UNION ALL" +
+                " SELECT task.task_id, task.ptask_id, task.description" +
+                " FROM task" +
+                " JOIN r" +
+                " ON task.task_id = r.ptask_id)" +
+                " SELECT * FROM r";
+        try (Connection connection = dao.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, task_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                res.add(rs.getInt("task_id"));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return res;
+    }
 
     //Сумма затрат на задачу по айдишнику (причем, если таких задач несколько, то считает всю сумму на них)
     public double getSumByTaskId(int task_id,int emp_id){
@@ -154,18 +157,22 @@ public class OutgoDAO implements IOutgoDAO {
     }
 
     //Возвращает сумму, потраченную работником на затрату уровнем выше
-//    public Map<String,Double> getPtaskSum(Integer emp_id,Integer ptask_id)  {
-//        Map<String,Double> res = new HashMap<>();
-//        ResultSet rs = dao.execSQL(String.format("SELECT t.ptask_id,o.emp_id,t.description,sum(summ) FROM outgo o,task t" +
-//                " WHERE o.task_id = t.task_id and t.ptask_id='%1$s' and emp_id='%2$s' GROUP BY t.ptask_id,t.description,o.emp_id",ptask_id,emp_id));
-//        try {
-//            while (rs.next()) {
-//                res.put(rs.getString("description"), rs.getDouble("sum"));
-//            }
-//        }catch (SQLException ex){
-//            ex.printStackTrace();
-//        }
-//        return res;
-//    }
+    public Map<String,Double> getPtaskSum(Integer emp_id,Integer ptask_id)  {
+        Map<String,Double> res = new HashMap<>();
+        String query = "SELECT t.ptask_id,o.emp_id,t.description,sum(summ) FROM outgo o,task t" +
+                " WHERE o.task_id = t.task_id and t.ptask_id=? and emp_id=? GROUP BY t.ptask_id,t.description,o.emp_id";
+        try (Connection connection = dao.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1,ptask_id);
+            ps.setInt(1,emp_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                res.put(rs.getString("description"), rs.getDouble("sum"));
+            }
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        return res;
+    }
 
 }

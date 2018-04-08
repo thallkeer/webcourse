@@ -180,7 +180,7 @@ public class EmployeeDAO implements IEmployeeDAO {
 
     public void updateUser(Employee employee) {
         String query = "UPDATE employee SET login = ?, password = ?, fio = ?," +
-                " auth_lvl = ?, account = ?  WHERE employee_id = ?";
+                " auth_lvl = ?, account = account + ?  WHERE employee_id = ?";
         try (Connection connection = dao.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, employee.getLogin());

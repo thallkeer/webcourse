@@ -39,26 +39,26 @@
 </div>
 
 <div id="openModal" class="modalDialog">
-    <div>
+    <div style="width: 210px">
         <a href="#close" title="Закрыть" class="close">X</a>
-        <h2>Добавление проекта</h2>
+        <div><h3>Добавление проекта</h3></div>
         <div class="divAddUser">
             <form action="/addProject" method="post">
                 <div>
-                    <input class="inputAdd" required  type="text" placeholder=" Название проекта" name="title"/>
+                    <input class="inputAdd" style="width: 180px" required  type="text" placeholder=" Название проекта" name="title"/>
                 </div>
                 <div>
-                    <label for="org">Категория</label><br>
+                    <label for="org">Организация</label>
                     <select name="org" id="org">
                         <option selected value="ООО 'ЗНАК-63'">ООО "ЗНАК-63"</option>
                         <option value='ООО "НПЦ" "ИТС"'>ООО "НПЦ" "ИТС"</option>
                     </select>
                 </div>
                 <div class="divLvl">
-                    <p>Архивный проект:<input class="inputAdd" type="checkbox" name="archival"></p>
+                    <span>Архивный проект:</span><input style="margin-bottom: 10px" id="archival" type="checkbox" name="archival">
                 </div>
                 <div class="divSubmit">
-                    <input class="inputAdd" type="submit" value="Добавить">
+                    <input class="submitAdd" type="submit" value="Добавить">
                 </div>
             </form>
         </div>
@@ -66,9 +66,9 @@
 </div>
 
 <div id="categoryModal" class="modalDialog">
-    <div>
+    <div class="addCatDiv">
         <a href="#close" title="Закрыть" class="close">X</a>
-        <h2>Добавление категории</h2>
+        <div><h3>Добавление категории</h3></div>
         <form id="addtaskform" action="/addTask" method="post">
             <div>
                 <select id="projsel" name="projsel" required>
@@ -78,16 +78,12 @@
                     </c:forEach>
                 </select>
             </div>
-            <div>
-                <label for="uplvl">Категория</label><br>
-                <input class="inputAdd" type="text" required id="uplvl" name="upcategory">
+            <div class="form-group">
+                <input type="text" required id="uplvl" name="upcategory"><label for="uplvl">Родительская категория</label>
+                <input type="text" id="downlvl" name="downcategory"><label for="downlvl">Дочерняя категория</label>
             </div>
             <div>
-                <label for="downlvl">Дочерняя категория</label><br>
-                <input class="inputAdd" type="text" id="downlvl" name="downcategory">
-            </div>
-            <div>
-                <input type="submit" value="Добавить">
+                <input class="submitAdd" type="submit" value="Добавить">
             </div>
         </form>
     </div>

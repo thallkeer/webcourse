@@ -11,19 +11,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @WebServlet("/test")
 public class TestServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        BaseDAO dao = PostgresDAO.getInstance();
-//        dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
-//        dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
-//        TaskDAO taskDAO = new TaskDAO(dao);
-//
+        BaseDAO dao = PostgresDAO.getInstance();
+        dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
+        dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
+        TaskDAO taskDAO = new TaskDAO(dao);
+
 //        Set<Integer> parentids = taskDAO.getParents().keySet();
 //        List<Task> tasklist = new ArrayList<>();
 //
@@ -33,8 +31,9 @@ public class TestServlet extends HttpServlet{
 //            tasklist.addAll(taskDAO.getTasksTreeByTaskId(id));
 //        }
 //        int tmpid =0;
-//        req.setAttribute("tasks",tasklist);
-//        req.setAttribute("tmpid",tmpid);
-//        req.getRequestDispatcher("Test.jsp").forward(req,resp);
+        List<Task> parents = taskDAO.getParentsList();
+
+        req.setAttribute("parents",parents);
+        req.getRequestDispatcher("Test.jsp").forward(req,resp);
     }
 }

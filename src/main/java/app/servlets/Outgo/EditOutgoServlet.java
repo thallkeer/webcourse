@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 @WebServlet("/editOutgo")
@@ -40,7 +42,23 @@ public class EditOutgoServlet extends HttpServlet{
         Task tmp = taskDAO.getTaskParent(outgoToEdit.getTask_id());
         Map<Integer,String> descs = taskDAO.getParents();
         //получаем для первого уровня категории уровнем ниже
-        Map<Integer,String> seconds = taskDAO.getNextLvl(tmp.getTask_id());
+        Map<Integer,String> seconds;
+        if (tmp.getTask_id()!=2 && tmp.getTask_id()!=3){
+            seconds = taskDAO.getNextLvl(tmp.getTask_id());
+            Map<Integer,String> tmpMap = taskDAO.getNextLvl(tmp.getTask_id());
+            for (Map.Entry entry : tmpMap.entrySet()){
+                if (!seconds.containsValue(entry.getValue())){
+                    int key = (int) entry.getKey();
+                    seconds.put(key, (String) entry.getValue());
+                }
+            }
+            seconds.putAll(tmpMap);
+        }
+        else {
+            seconds = taskDAO.getNextLvl(tmp.getTask_id());
+        }
+
+
         Map<Integer,String> thirds = taskDAO.getNextLvl(parent_id);
 
         int[] indexes = new int[]{ tmp.getTask_id(),parent_id,outgoToEdit.getTask_id()};
@@ -51,6 +69,7 @@ public class EditOutgoServlet extends HttpServlet{
         req.setAttribute("indexes",indexes);
         req.getRequestDispatcher("EditOutgo.jsp").forward(req,resp);
     }
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

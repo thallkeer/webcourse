@@ -42,7 +42,7 @@
             <form class="addOutgoform" id="addCategoryform" name="addform" action="/changeOptions" method="post">
                 <div><h3>Добавление расхода</h3></div>
             <div>
-                <select id="first" name="firstchoice" required onchange="this.form.submit()" >
+                <select id="first" name="firstchoice" required onchange="submit()" >
                     <option value="0" selected disabled>Выберите расход</option>
                     <c:forEach  items="${descs}" var="desc">
                         <option value="${desc.key}"
@@ -53,7 +53,7 @@
                 </select>
             </div>
             <div>
-                        <select  id="second" name="secondchoice" required onchange="this.form.submit()">
+                        <select  id="second" name="secondchoice" required onchange="submit()">
                         <option selected value="0" disabled>Выбрать</option>
                         <c:forEach items="${seconds}"  var="sec">
                             <option value="${sec.key}"
@@ -73,19 +73,19 @@
             </select></div>
 
             <div><input class="inputAcc" name="sum" type="number" value="${sum}" step="0.01" min="0"></div>
-                <div> <input type="submit" value="Добавить" formaction="/addOutgo" formmethod="post">
+                <div> <input class="submitAdd" type="submit" value="Добавить" formaction="/addOutgo" formmethod="post">
                       <a href="#openModal" class="hrefAddCategory">Добавить категорию</a>
                 </div>
 </form>
 
 
 <div id="openModal" class="modalDialog">
-    <div>
+    <div class="addCatDiv">
         <a href="#close" title="Закрыть" class="close">X</a>
         <%--<div >  style="margin: 0 auto 20px;"--%>
         <div><h3>Добавление категории</h3></div>
         <div>
-        <form id="addtaskform" action="/addTask" method="post">
+        <form class="addCategoryform" action="/addTask" method="post">
             <div>
             <select class="projsel" id="projsel" name="projsel" required>
                 <option value="0" selected disabled>Выберите проект</option>
@@ -94,13 +94,9 @@
                 </c:forEach>
             </select>
             </div>
-            <div>
-                <p>Категория</p>
-                <input class="inputAddCat" type="text" required id="uplvl" name="upcategory">
-            </div>
-            <div>
-                <p>Дочерняя категория</p>
-                <input class="inputAddCat" type="text" id="downlvl" name="downcategory">
+            <div class="form-group">
+                <input type="text" required id="uplvl" name="upcategory"><label for="uplvl">Родительская категория</label>
+                <input type="text" id="downlvl" name="downcategory"><label for="downlvl">Дочерняя категория</label>
             </div>
             <div>
                 <input class="submitAdd" type="submit" value="Добавить">

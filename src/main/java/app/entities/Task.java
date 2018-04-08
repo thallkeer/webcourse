@@ -6,8 +6,7 @@ public class Task {
 
 
     private int task_id;
-
-   private int ptask_id;
+    private int ptask_id;
 //    private Task parent_task;
 
     private String description;
@@ -66,8 +65,6 @@ public class Task {
                 ", organization='" + organization + '\'' +
                 '}';
     }
-
-
 
 //    public Task getParent_task() {
 //        return parent_task;

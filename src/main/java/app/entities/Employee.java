@@ -70,6 +70,10 @@ public class Employee implements Serializable {
         this.account-=sum;
     }
 
+    public void replenishBalance(double sum) {
+        this.account+=sum;
+    }
+
     public Integer getEmployee_id() {
         return employee_id;
     }

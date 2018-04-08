@@ -18,7 +18,7 @@
                     <input  type="text" disabled id="uplvl" value="${parent}"/>
                 </div>
                 <div>
-                    <input type="submit" value="ОК">
+                    <input class="submitAdd" type="submit" value="ОК">
                 </div>
             </form>
         </div>

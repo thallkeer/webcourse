@@ -36,6 +36,17 @@
     /*background: -o-linear-gradient(#fff, #999);*/
 }
 
+.modalDialog > .addCatDiv {
+    width: 210px;
+}
+
+.modalDialog > .divAddUser {
+    width: 230px;
+    /*margin: 0 auto 20px;*/
+}
+
+
+
 .close {
     background: #606061;
     color: #FFFFFF;

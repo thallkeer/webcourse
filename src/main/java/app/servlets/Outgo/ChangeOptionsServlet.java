@@ -17,25 +17,26 @@ import java.util.*;
 
 @WebServlet("/changeOptions")
 public class ChangeOptionsServlet extends HttpServlet {
-    private Map<Integer, String> descs;
     private Map<Integer, String> seconds;
     private Map<Integer, String> thirds;
-    private int[] indexes;
+    private int[] indexes = new int[3];
     private ITaskDAO taskDAO;
 
     @Override
     public void init() {
-        descs = null;
-        seconds = null;
-        thirds = null;
+//        descs = null;
+//        seconds = null;
+//        thirds = null;
         indexes = new int[3];
         taskDAO = new TaskDAO(PostgresDAO.getInstance());
     }
 
+
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        descs = (Map<Integer, String>) session.getAttribute("descs");
+        Map<Integer, String> descs = (Map<Integer, String>) session.getAttribute("descs");
         double sum=0;
         if (req.getParameter("sum")!=null) {
             sum = Double.parseDouble(req.getParameter("sum"));
@@ -49,16 +50,15 @@ public class ChangeOptionsServlet extends HttpServlet {
             }
             indexes[0] = selectedfirstIndex;
             if (selectedfirstIndex != 2 && selectedfirstIndex != 3) {
-                seconds = taskDAO.getNextLvl(1);
-                Map<Integer, String> secondsadd = taskDAO.getNextLvl(selectedfirstIndex);
-                seconds.putAll(secondsadd);
+                seconds = taskDAO.getNextLvl(selectedfirstIndex);
+                seconds.putAll(dublicateHelper(taskDAO.getNextLvl(1)));
             } else {
                 seconds = taskDAO.getNextLvl(selectedfirstIndex);
             }
 
         }
-        if (req.getParameter("secondchoice") != null) {
-            if (!isChanged) {
+        if (req.getParameter("secondchoice") != null ) {
+            if (!isChanged || req.getParameter("editMode") != null) {
                 int selectedsecondIndex = Integer.valueOf(req.getParameter("secondchoice"));
                 indexes[1] = selectedsecondIndex;
                 thirds = taskDAO.getNextLvl(selectedsecondIndex);
@@ -74,6 +74,17 @@ public class ChangeOptionsServlet extends HttpServlet {
         } else {
             req.getRequestDispatcher("AddOutgo.jsp").forward(req, resp);
         }
+    }
+
+    private Map<Integer,String> dublicateHelper(Map<Integer,String> param){
+        Map<Integer,String> resMap = new HashMap<>();
+        for (Map.Entry entry : param.entrySet()){
+            if (!seconds.containsValue(entry.getValue())){
+                int key = (int) entry.getKey();
+               resMap.put(key, (String) entry.getValue());
+            }
+        }
+        return resMap;
     }
 }
 

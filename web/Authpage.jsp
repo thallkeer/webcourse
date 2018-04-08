@@ -23,7 +23,7 @@
         </tr>
         <tr>
             <td></td>
-            <td><input type="submit" value="Login"/><input type="reset" value="Reset"/></td>
+            <td><input class="" type="submit" value="Login"/><input type="reset" value="Reset"/></td>
         </tr>
     </table>
 </form>

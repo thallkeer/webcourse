@@ -3,6 +3,7 @@ package app.dao.impl;
 import app.dao.BaseDAO;
 import app.dao.ITaskDAO;
 import app.entities.Task;
+import app.entities.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,7 +24,7 @@ public class TaskDAO implements ITaskDAO {
 
     public void addCategory(Task task) {
         //Проверка на существование у родителя такого потомка
-        if (getIdByDescription(task.getPtask_id(),task.getDescription())==-1) return;
+        if (getIdByDescription(task.getPtask_id(),task.getDescription())!=-1) return;
         String query = "Insert into task(ptask_id,description) values (?,?)";
         try (Connection connection = dao.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(query);
@@ -127,63 +128,57 @@ public class TaskDAO implements ITaskDAO {
         return res;
     }
 
-//    public List<Task> getNormalTree(){
-//        List<Task> parents = getParentsList();
-//        List<Task> res = new ArrayList<>();
-//        for (Task task:parents) {
-////            res.addAll(Test(task.getTask_id()));
-//            List<Task> tmpForRes = new ArrayList<>();
-//            tmpForRes.add(task);
-//            List<Task> tmp = new ArrayList<>(getUpLvl(task.getTask_id()));
-//            for (Task t :
-//                    tmp) {
-//                tmpForRes.add(t);
-//                tmpForRes.addAll(getUpLvl(t.getTask_id()));
-//            }
-//            res.addAll(tmpForRes);
-//        }
-//        return res;/*Test(new ArrayList<Task>(),1);*/
-//    }
+//////////////////////////////////////////////ВЫВОД ДЕРЕВА РАСХОДОВ
 
-    public List<Task> getNormalTree(List<Task> res,int task_id){
-        res.add(getTaskById(task_id));
-        List<Task> tmp = getUpLvl(task_id);
+    public List<Task> getTasksTree(){
+        List<Task> allTasks = getAll(true);
+        List<Integer> parent_ids= getParentIds(allTasks);
+        List<Task> result = new ArrayList<>();
+        for (int id:
+             parent_ids) {
+            getNormalTree(result,allTasks,id);
+        }
+        return result;
+    }
+
+    private void getNormalTree(List<Task> res, List<Task> allTasks, int task_id){
+        res.add(getTaskByIdAnalog(allTasks,task_id));
+        List<Task> tmp = getUpLvlAnalog(task_id,allTasks);
         if (tmp==null){
-            return res;
+            return;
         }
         for (Task task:
              tmp) {
-            getNormalTree(res,task.getTask_id());
+            getNormalTree(res,allTasks,task.getTask_id());
+        }
+    }
+
+    private List<Integer> getParentIds(List<Task> allTasks) {
+        List<Integer> res = new ArrayList<>();
+        for (Task task :
+                allTasks) {
+            if (task.getPtask_id()==0) res.add(task.getTask_id());
         }
         return res;
     }
 
-    private List<Task> getUpLvl(int task_id){
+    private Task getTaskByIdAnalog(List<Task> allTasks,int task_id){
+        for (Task task:
+                allTasks) {
+            if (task.getTask_id()==task_id) return task;
+        }
+        return null;
+    }
+
+    private List<Task> getUpLvlAnalog(int task_id,List<Task> allTasks){
         List<Task> res = new ArrayList<>();
-        String query = "Select task_id,ptask_id,description from task where ptask_id = ?";
-        try (Connection connection = dao.getConnection()){
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1,task_id);
-            ResultSet rs = ps.executeQuery();
-            if(rs==null) return null;
-            setTaskHelper(res, rs);
-        }
-        catch (SQLException e){
-            e.printStackTrace();
+        for (Task task:
+             allTasks) {
+            if (task.getPtask_id()==task_id) res.add(task);
         }
         return res;
     }
-
-    private void setTaskHelper(List<Task> res, ResultSet rs) throws SQLException {
-        while (rs.next())
-        {
-            Task task = new Task();
-            task.setTask_id(rs.getInt("task_id"));
-            task.setPtask_id(rs.getInt("ptask_id"));
-            task.setDescription(rs.getString("description"));
-            res.add(task);
-        }
-    }
+///////////////////////////////////////////
 
     public int getIdByDescription(int ptask_id,String descr){
         int res=-1;
@@ -222,17 +217,24 @@ public class TaskDAO implements ITaskDAO {
         return res;
     }
 
-    public List<Task> getParentsList(int someint) {
-        List<Task> descrs = new ArrayList<>();
+    public List<Task> getParentsList() {
+        List<Task> res = new ArrayList<>();
         String query = "Select task_id,ptask_id,description from task where ptask_id IS NULL";
         try (Connection connection = dao.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
-            setTaskHelper(descrs, rs);
+            while (rs.next())
+            {
+                Task task = new Task();
+                task.setTask_id(rs.getInt("task_id"));
+                task.setPtask_id(rs.getInt("ptask_id"));
+                task.setDescription(rs.getString("description"));
+                res.add(task);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return descrs;
+        return res;
     }
 
     public void addProject(Task project) {
@@ -267,6 +269,7 @@ public class TaskDAO implements ITaskDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 task = new Task(rs.getInt("task_id"), rs.getInt("ptask_id"), rs.getString("description"));
+
                 taskList.add(task);
             }
         } catch (SQLException e) {
