@@ -21,10 +21,10 @@ import java.util.List;
 @WebServlet("/employees")
 public class EmployeesServlet extends HttpServlet{
 
-    BaseDAO dao;
+    private BaseDAO dao;
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         dao = PostgresDAO.getInstance();
         dao.setURL(PostgresDAO.DEFAULT_HOST, PostgresDAO.DEFAULT_DATABASE, PostgresDAO.DEFAULT_PORT);
         dao.connect(PostgresDAO.DEFAULT_LOGIN, PostgresDAO.DEFAULT_PASSWORD);
@@ -32,19 +32,12 @@ public class EmployeesServlet extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
         List<Employee> emps;
         IEmployeeDAO empDAO;
         dao = PostgresDAO.getInstance();
         empDAO = new EmployeeDAO(dao);
-        try {
-            emps = empDAO.getAll();
-            req.setAttribute("emps", emps);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        session.setAttribute("login", req.getAttribute("login"));
+        emps = empDAO.getAll();
+        req.setAttribute("emps", emps);
         req.getRequestDispatcher("Users.jsp").forward(req, resp);
     }
 }
