@@ -1,0 +1,116 @@
+@startuml
+'
+'abstract class AbstractList
+'abstract AbstractCollection
+'interface List
+'interface Collection
+'
+'List <|-- AbstractList
+'Collection <|-- AbstractCollection
+'
+'Collection <|- List
+'AbstractCollection <|- AbstractList
+'AbstractList <|-- ArrayList
+'
+'class ArrayList {
+'Object[] elementData
+'size()
+'}
+
+
+
+enum RepairType {
+    Maintenance
+    Repair
+    Overhaul
+}
+
+enum WorkType {
+CanvasDrainage
+RoadСlothes
+ArtificialConstr
+RoadConstrElements
+WinterMaintenance
+Landscaping
+}
+
+enum RepairStatus {
+Made
+InProgress
+WillBeMade
+Stopped
+}
+
+class WorkSort {
+  string Description
+}
+
+WorkSort o-- WorkType
+WorkSort o-- RepairType
+
+abstract class DomainObject {
+    -ID
+}
+
+DomainObject <|-- RoadRepair
+DomainObject <|-- WorkSort
+DomainObject <|-- Organization
+DomainObject <|-- FeatureObject
+DomainObject <|-- Address
+
+class RoadRepair {
+    -RepairStartDate
+    -RepairEndDate
+    -RepairStartDateFact
+    -RepairEndDateFact
+}
+
+RoadRepair o-- RepairStatus
+RoadRepair o-- WorkType
+RoadRepair o-- RepairType
+RoadRepair o-- WorkSort
+RoadRepair o-- Organization
+RoadRepair o-- FeatureObject
+
+
+class Organization {
+    -Name
+    -Addresses
+    -Categories
+    -TimeOfWork
+    -DinnerTime
+    -Contacts
+}
+
+class FeatureObject {
+    -Layer
+    -Geometry
+    -EnvelopePolygon
+    -FeatureEnvelope
+    -Style
+}
+
+class Address {
+    -Street
+    -House
+    -Disctrict
+    -City
+    -Area
+    -Crossroad
+    -Highway
+    -HighwayBeginKm
+    -HighwayEndKm
+    -FullAddress
+    -Kilometer
+    -AddressType
+    -Orientir
+}
+
+class RoadRepairAddress{
+
+}
+
+RoadRepair *-- RoadRepairAddress
+RoadRepairAddress o-- Address
+
+@enduml

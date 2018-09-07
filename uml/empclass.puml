@@ -1,0 +1,37 @@
+@startuml
+:Пользователь: as User
+(Выбор сущности) as ChooseEnt
+(Просмотр данных о сущности) as ViewEnt
+(Добавление данных) as Create
+'(Обновление данных) as bdUpdate
+(Удаление данных) as bdDelete
+'(Сохранение данных) as bdSave
+(Редактирование данных) as Update
+(Редактирование параметров) as paramUpdate
+(Выбор записи для редактирования) as chooseForUpdate
+(Выбор записи для удаления) as chooseForDelete
+(Добавление расхода) as addOutgo
+(Добавление задачи) as addTask
+(Добавление проекта) as addProject
+(Добавление пользователя) as addEmployee
+(Просмотр списка сотрудников) as ViewEmps
+(Просмотр справочника задач) as ViewTasks
+(Просмотр расходов сотрудника) as ViewOutgoes
+User --> (ChooseEnt)
+ChooseEnt --> (ViewEnt)
+ViewEnt <-- (Create)
+ViewEnt <-- (Update)
+ViewEnt <-- (bdDelete)
+ViewEnt <-- (ViewEmps)
+ViewEnt <-- (ViewTasks)
+ViewEnt <-- (ViewOutgoes)
+'Create <-- (bdSave)
+addOutgo --> (Create)
+addTask --> (Create)
+addProject --> (Create)
+addEmployee --> (Create)
+'Update <-- (bdUpdate)
+chooseForUpdate <-- (paramUpdate)
+Update --> (chooseForUpdate)
+bdDelete --> (chooseForDelete)
+@enduml
