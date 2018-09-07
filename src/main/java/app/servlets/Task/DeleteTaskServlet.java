@@ -14,10 +14,9 @@ import java.io.IOException;
 @WebServlet("/deleteTask")
 public class DeleteTaskServlet extends HttpServlet{
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Integer task_id = Integer.valueOf(req.getParameter("task_id"));
-        BaseDAO dao = PostgresDAO.getInstance();
-        TaskDAO taskDAO = new TaskDAO(dao);
+        TaskDAO taskDAO = new TaskDAO(PostgresDAO.getInstance());
         taskDAO.delete(task_id);
         resp.sendRedirect("/outgoes");
     }
