@@ -1,5 +1,7 @@
 .idea
 lib/
+out/
+uml/
 target/
 *.iml
 *.ipr
